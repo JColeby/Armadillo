@@ -7,8 +7,7 @@ using std::string;
 using std::vector;
 
 
-inline vector<vector<string>> separateStringVectorBySubstrings(const vector<string>& tokenizedInput, const string separator)
-{
+inline vector<vector<string>> separateTokensByToken(const vector<string>& tokenizedInput, const string separator) {
     vector<vector<string>> individualCommands = {};
     vector<string> commandTokens;
     for (const auto& token : tokenizedInput) {
@@ -21,4 +20,6 @@ inline vector<vector<string>> separateStringVectorBySubstrings(const vector<stri
         }
     }
     individualCommands.push_back(commandTokens);
+
+    return individualCommands;
 }

@@ -1,8 +1,13 @@
-//
-// Created by jcbos on 12/10/2025.
-//
+#pragma once
+#include <string>
+#include <iostream>
+#include <vector>
 
-#ifndef ARMADILLO_PIPEHANDLER_H
-#define ARMADILLO_PIPEHANDLER_H
+using std::string;
+using std::vector;
+using std::cout;
+using std::endl;
 
-#endif //ARMADILLO_PIPEHANDLER_H
+void pipeHandler(const vector<string>& tokenizedInput);
+
+

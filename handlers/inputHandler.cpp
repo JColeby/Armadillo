@@ -1,7 +1,9 @@
 #pragma once
 #include "headers/inputHandler.h"
+#include "headers/pipeHandler.h"
 #include "../TerminalFormatting.h"
 #include "../commonFunctions/listToString.h"
+#include "../commonFunctions/separateTokensByToken.h"
 
 
 vector<string> tokenizeInput(const string& inputString, bool removeQuotes, bool dontTokenizeEmbedded) {
@@ -57,6 +59,14 @@ vector<string> tokenizeInput(const string& inputString, bool removeQuotes, bool 
 
 void inputHandler(const string& userInput) {
     vector<string> tokens = tokenizeInput(userInput, true, true);
+    vector<vector<string>> individualCommands = separateTokensByToken(tokens, "&&");
+    for (vector<string> command : individualCommands)
+    {
+
+    }
+
     string tokenizedString = listToString(tokens);
+
+
     cout << tokenizedString << endl;
 }
