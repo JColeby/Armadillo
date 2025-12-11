@@ -1,0 +1,8 @@
+//
+// Created by jcbos on 12/10/2025.
+//
+
+#ifndef ARMADILLO_PIPEHANDLER_H
+#define ARMADILLO_PIPEHANDLER_H
+
+#endif //ARMADILLO_PIPEHANDLER_H

@@ -1,0 +1,8 @@
+//
+// Created by jcbos on 12/10/2025.
+//
+
+#ifndef ARMADILLO_EMBEDDEDHANDLER_H
+#define ARMADILLO_EMBEDDEDHANDLER_H
+
+#endif //ARMADILLO_EMBEDDEDHANDLER_H
