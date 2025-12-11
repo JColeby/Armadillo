@@ -1,9 +1,7 @@
+#pragma once
 #include "headers/inputHandler.h"
 #include "../TerminalFormatting.h"
 #include "../commonFunctions/listToString.h"
-
-
-
 
 
 vector<string> tokenizeInput(const string& inputString, bool removeQuotes, bool dontTokenizeEmbedded) {

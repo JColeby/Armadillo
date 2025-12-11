@@ -1,3 +1,8 @@
-//
-// Created by jcbos on 12/10/2025.
-//
+#pragma once
+#include "headers/andHandler.h"
+#include "headers/pipeHandler.h"
+
+
+void andHandler(const vector<string>& tokenizedInput) {
+
+}
