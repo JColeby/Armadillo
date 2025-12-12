@@ -1,8 +1,15 @@
-//
-// Created by jcbos on 12/10/2025.
-//
+#pragma once
+#include <string>
+#include <vector>
+#include <iostream>
+#include <windows.h>
+#include <filesystem>
+#include <fstream>
+#include <unordered_set>
 
-#ifndef ARMADILLO_COMMANDHANDLER_H
-#define ARMADILLO_COMMANDHANDLER_H
+using std::string;
+using std::vector;
+using std::cout;
+using std::endl;
 
-#endif //ARMADILLO_COMMANDHANDLER_H
+void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, bool closeWriteOnFinish);

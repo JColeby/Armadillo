@@ -86,7 +86,8 @@ int inputLoop() {
         string input;
         getline(cin, input);
         if (input == "exit") { return 0; } // exits the shell
-        inputHandler(input);
+        HANDLE finalWriteHandle = nullptr;
+        inputHandler(input, finalWriteHandle);
         // runningCommand = true;
         // thread t(inputHandler, input);
         // while (runningCommand) {

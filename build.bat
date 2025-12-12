@@ -16,10 +16,10 @@ robocopy "resources" "%ARMADILLO%\resources" /E /MIR
 
 
 echo Compiling Main Executable
-g++ -std=c++17 -g armadillo.cpp inputLoop\inputLoop.cpp Handlers\*.cpp -Iinclude -o "%ARMADILLO%\Ardo.exe"
+g++ -std=c++17 -g armadillo.cpp Handlers\*.cpp -Iinclude -o "%ARMADILLO%\Ardo.exe"
+copy "%ARMADILLO%\Ardo.exe" "Ardo.exe"
 
-
-for /f "usebackq delims=" %%C in ("cmd\standardList.config") do (
+for /f "usebackq delims= eol=#" %%C in ("cmd\standardList.config") do (
 
     echo Compiling Standard Command %%C
     if not exist "%ARMADILLO%\cmd\standard\%%C" mkdir "%ARMADILLO%\cmd\standard\%%C"
@@ -32,7 +32,7 @@ for /f "usebackq delims=" %%C in ("cmd\standardList.config") do (
 )
 
 
-for /f "usebackq delims=" %%C in ("cmd\customList.config") do (
+for /f "usebackq delims= eol=#" %%C in ("cmd\customList.config") do (
 
     echo Compiling Custom Command %%C
     if not exist "%ARMADILLO%\cmd\custom\%%C" mkdir "%ARMADILLO%\cmd\custom\%%C"
@@ -43,9 +43,3 @@ for /f "usebackq delims=" %%C in ("cmd\customList.config") do (
     REM Compile module
     g++ -std=c++17 -g cmd\custom\%%C\*.cpp -o "%ARMADILLO%\cmd\custom\%%C\%%C.exe"
 )
-
-
-
-
-
-g++ -std=c++17 -g armadillo.cpp inputLoop\inputLoop.cpp Handlers\*.cpp -Iinclude -o "Ardo.exe"

@@ -2,8 +2,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <thread>
-
+#include <windows.h>
 
 using std::string;
 using std::vector;
@@ -13,9 +12,11 @@ using std::vector;
 using std::cerr;
 
 
-vector<string> tokenizeInput(const string& inputString, bool removeQuotes);
+std::vector<std::string> tokenizeInput(const std::string& inputString, bool removeQuotes);
 
-void inputHandler(const string& userInput);
+void inputHandler(const std::string& userInput, HANDLE& finalWriteHandle);
+
+
 
 
 

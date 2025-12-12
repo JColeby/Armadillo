@@ -1,90 +1,42 @@
 #include <windows.h>
-#include <string>
-#include <vector>
 #include <iostream>
 
-std::string execWindows(const std::string &exePath, const std::vector<std::string> &args)
-{
-    // Build command line: "exe arg1 arg2 ..."
-    std::string cmd = "\"" + exePath + "\"";
-    for (const auto &a : args)
-        cmd += " \"" + a + "\"";
+int main() {
+    HANDLE hRead, hWrite;
+    SECURITY_ATTRIBUTES sa = { sizeof(sa), NULL, TRUE };
 
-    // --- Create pipes for stdout redirection ---
-    HANDLE hReadPipe, hWritePipe;
-    SECURITY_ATTRIBUTES saAttr{};
-    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
-    saAttr.bInheritHandle = TRUE;       // child inherits handles
-    saAttr.lpSecurityDescriptor = NULL;
-
-    if (!CreatePipe(&hReadPipe, &hWritePipe, &saAttr, 0))
-        throw std::runtime_error("CreatePipe failed");
-
-    // Ensure the read handle is NOT inherited:
-    SetHandleInformation(hReadPipe, HANDLE_FLAG_INHERIT, 0);
-
-    // --- Setup STARTUPINFO to redirect stdout ---
-    STARTUPINFOA si{};
-    PROCESS_INFORMATION pi{};
-    si.cb = sizeof(si);
-
-    si.hStdOutput = hWritePipe;
-    si.hStdError  = hWritePipe;   // redirect stderr too (optional)
-    si.dwFlags |= STARTF_USESTDHANDLES;
-
-    // --- Create the child process ---
-    if (!CreateProcessA(
-            NULL,
-            cmd.data(),    // command line (writeable buffer!)
-            NULL,
-            NULL,
-            TRUE,          // inherit handles
-            0,
-            NULL,
-            NULL,
-            &si,
-            &pi))
-    {
-        CloseHandle(hReadPipe);
-        CloseHandle(hWritePipe);
-        throw std::runtime_error("CreateProcess failed");
+    // Create a single pipe
+    if (!CreatePipe(&hRead, &hWrite, &sa, 0)) {
+        std::cerr << "Failed to create pipe\n";
+        return 1;
     }
 
-    // The child process now uses hWritePipe; close our copy:
-    CloseHandle(hWritePipe);
+    STARTUPINFO si = { sizeof(si) };
+    si.dwFlags = STARTF_USESTDHANDLES;
+    si.hStdInput = hRead;   // child reads from this
+    si.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE); // child's stdout normal
 
-    // --- Read child's output ---
-    std::string output;
-    char buffer[256];
-    DWORD bytesRead;
+    PROCESS_INFORMATION pi;
 
-    while (true)
-    {
-        BOOL success = ReadFile(hReadPipe, buffer, sizeof(buffer), &bytesRead, NULL);
-        if (!success || bytesRead == 0)
-            break;
-        output.append(buffer, bytesRead);
-    }
+    if (!CreateProcess(
+            NULL,
+            (LPSTR)"child.exe", // your child process
+            NULL, NULL,
+            TRUE, 0, NULL, NULL,
+            &si, &pi)) {
+        std::cerr << "CreateProcess failed\n";
+        return 1;
+            }
 
-    // Cleanup
-    CloseHandle(hReadPipe);
+    CloseHandle(hRead); // parent doesn't read
+    const char* msg = "Hello child!\n";
+    DWORD written;
+    WriteFile(hWrite, msg, strlen(msg), &written, NULL);
+    CloseHandle(hWrite); // signal EOF
+
+    WaitForSingleObject(pi.hProcess, INFINITE);
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
 
-    return output;
-}
-
-int main()
-{
-    try
-    {
-        std::string result = execWindows("C:\\Path\\To\\otherProgram.exe",
-                                         {"arg1", "arg2", "arg3"});
-
-        std::cout << "Child output:\n" << result;
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << "Error: " << e.what() << "\n";
-    }
+    return 0;
 }

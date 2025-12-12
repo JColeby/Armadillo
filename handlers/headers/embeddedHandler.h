@@ -1,8 +1,11 @@
-//
-// Created by jcbos on 12/10/2025.
-//
+#pragma once
+#include <string>
+#include <vector>
+#include <iostream>
 
-#ifndef ARMADILLO_EMBEDDEDHANDLER_H
-#define ARMADILLO_EMBEDDEDHANDLER_H
+using std::string;
+using std::vector;
+using std::cout;
+using std::endl;
 
-#endif //ARMADILLO_EMBEDDEDHANDLER_H
+void embeddedHandler(vector<string>& tokenizedInput);

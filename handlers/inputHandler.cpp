@@ -1,54 +1,56 @@
-#pragma once
 #include "headers/inputHandler.h"
 #include "headers/pipeHandler.h"
 #include "../TerminalFormatting.h"
 #include "../commonFunctions/listToString.h"
 #include "../commonFunctions/separateTokensByToken.h"
+#include "headers/commandHandler.h"
 
-
-vector<string> tokenizeInput(const string& inputString, bool removeQuotes, bool dontTokenizeEmbedded) {
+vector<string> tokenizeInput(const string& inputString, bool dontTokenizeEmbedded) {
     std::istringstream wordSeparator(inputString);
     vector<string> tokens;
     string token;
     // separating characters by whitespace
     while (wordSeparator >> token) {
+        if (token.empty()) { continue; }
 
-
-        if (token[0] == '"') { // logic for quoted input. quotes will be automatically removed
-            string quotedToken;
-
-            if (removeQuotes) { token = token.erase(0, 1); }
-            do { // gets next token until we hit a word that ends with " or until the input ends
-                quotedToken += token + " ";
-            } while (token[token.size() - 1] != '"' and wordSeparator >> token);
-            quotedToken.erase(quotedToken.size() - 1); // for some reason there is always an addition whitespace that gets thrown onto the end
-
-            if (removeQuotes) { // removed trailing "
-                if (quotedToken[quotedToken.size() - 1] == '"') { quotedToken.erase(quotedToken.size() - 1); }
-            }
-            tokens.push_back(quotedToken);
-        }
-
-
-        else if (dontTokenizeEmbedded and token.size() >= 2 and token[0] == '$' and token[1] == '(') { // logic for quoted input. quotes will be automatically removed
+        if (dontTokenizeEmbedded and token.size() >= 2 and token.rfind("$(", 0) == 0) { // logic for quoted input. quotes will be automatically removed
 
             int parenthesesCount = 0;
             string embeddedCommand;
 
             do { // gets next token until all parentheses are closed
-                int opi = 0; // opening parentheses index
-                while (opi < token.size() - 1 and token[opi] == '$' and token[opi+1] == '(') {parenthesesCount++; opi += 2; }
-
-                int cpi = token.size() - 1; // closing parentheses index
-                while (cpi >= 0 and token[cpi] == ')') { parenthesesCount--; cpi--; }
-
+                for (char c : token) {
+                    if (c == '(') parenthesesCount++;
+                    if (c == ')') parenthesesCount--;
+                }
                 embeddedCommand += token + " ";
             } while (parenthesesCount != 0 and wordSeparator >> token);
 
-            embeddedCommand.erase(embeddedCommand.size() - 1); // removes the additional whitespace that gets added to the end because of the loop
+            if (parenthesesCount != 0) {
+                std::cerr << "ERROR: unmatched parentheses in embedded command.\n";
+                return {};
+            }
+
+            embeddedCommand.pop_back(); // removes the additional whitespace that gets added to the end because of the loop
             tokens.push_back(embeddedCommand);
         }
 
+
+        else if (!token.empty() && token[0] == '"') { // logic for quoted input. quotes will be automatically removed
+            string quotedToken;
+
+            do { // gets next token until we hit a word that ends with " or until the input ends
+                quotedToken += token + " ";
+            } while (token[token.size() - 1] != '"' and wordSeparator >> token);
+            quotedToken.pop_back(); // for some reason there is always an addition whitespace that gets thrown onto the end
+
+            if (token[token.size() - 1] != '"') {
+                std::cerr << "ERROR: unmatched quote in input.\n";
+                return {}; // or handle however you want
+            }
+
+            tokens.push_back(quotedToken);
+        }
 
         else { tokens.push_back(token); }
 
@@ -57,16 +59,11 @@ vector<string> tokenizeInput(const string& inputString, bool removeQuotes, bool 
 }
 
 
-void inputHandler(const string& userInput) {
-    vector<string> tokens = tokenizeInput(userInput, true, true);
+void inputHandler(const string& userInput, HANDLE& finalWriteHandle) {
+    vector<string> tokens = tokenizeInput(userInput, true);
+    if (tokens.empty()) { return; }
     vector<vector<string>> individualCommands = separateTokensByToken(tokens, "&&");
-    for (vector<string> command : individualCommands)
-    {
-
+    for (vector<string> command : individualCommands) {
+        pipeHandler(command, finalWriteHandle);
     }
-
-    string tokenizedString = listToString(tokens);
-
-
-    cout << tokenizedString << endl;
 }
