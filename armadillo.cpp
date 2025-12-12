@@ -33,6 +33,18 @@ int validatePathStructure() {
         std::cerr << "FATAL ERROR: Could not find '" + ARDO_PATH + "/cmd/custom'. Did you modify the directory or 'build.bat'?";
         return -1;
     }
+    if (!std::filesystem::exists(ARDO_PATH + "/cmd/aliases.config")) {
+        std::cerr << "FATAL ERROR: Could not find '" + ARDO_PATH + "/cmd/aliases.config'. Did you modify the directory or 'build.bat'?";
+        return -1;
+    }
+    if (!std::filesystem::exists(ARDO_PATH + "/cmd/customList.config")) {
+        std::cerr << "FATAL ERROR: Could not find '" + ARDO_PATH + "/cmd/customList.config'. Did you modify the directory or 'build.bat'?";
+        return -1;
+    }
+    if (!std::filesystem::exists(ARDO_PATH + "/cmd/standardList.config")) {
+        std::cerr << "FATAL ERROR: Could not find '" + ARDO_PATH + "/cmd/standardList.config'. Did you modify the directory or 'build.bat'?";
+        return -1;
+    }
     return 1;
 }
 

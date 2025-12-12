@@ -15,6 +15,12 @@ echo Copying Resources
 robocopy "resources" "%ARMADILLO%\resources" /E /MIR
 
 
+echo Copying Config Files
+copy "cmd\aliases.config" "%ARMADILLO%\cmd\aliases.config"
+copy "cmd\customList.config" "%ARMADILLO%\cmd\customList.config"
+copy "cmd\standardList.config" "%ARMADILLO%\cmd\standardList.config"
+
+
 echo Compiling Main Executable
 g++ -std=c++17 -g armadillo.cpp Handlers\*.cpp -Iinclude -o "%ARMADILLO%\Ardo.exe"
 copy "%ARMADILLO%\Ardo.exe" "Ardo.exe"

@@ -10,7 +10,7 @@ string getCommandPath(string cmd)
 {
     std::unordered_set<std::string> visited; // help prevent infinite alias loops
 
-    string alias = isStringInFile(cmd, ARDO_PATH + "/cmd/aliases.config");
+    string alias = isStringInFile(cmd + "->", ARDO_PATH + "/cmd/aliases.config", false );
     while (!alias.empty())
     {
         if (visited.count(cmd)) {
@@ -28,13 +28,13 @@ string getCommandPath(string cmd)
             std::cerr << "ERROR: Alias malformed. Could not execute the desired command" << endl;
             return "";
         }
-        alias = isStringInFile(cmd, ARDO_PATH + "/cmd/aliases.config");
+        alias = isStringInFile(cmd + "->", ARDO_PATH + "/cmd/aliases.config", false );
     }
-    if (!isStringInFile(cmd, ARDO_PATH + "/cmd/standardList.config").empty())
+    if (!isStringInFile(cmd, ARDO_PATH + "/cmd/standardList.config", true).empty())
     {
         return ARDO_PATH + "/cmd/standard/" + cmd + "/" + cmd + ".exe";
     }
-    if (!isStringInFile(cmd, ARDO_PATH + "/cmd/customList.config").empty())
+    if (!isStringInFile(cmd, ARDO_PATH + "/cmd/customList.config", true).empty())
     {
         return ARDO_PATH + "/cmd/custom/" + cmd + "/" + cmd + ".exe";
     }
@@ -61,6 +61,7 @@ void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE wri
 
 
     // check and handle embedded commands!!!!
+    embeddedHandler(tokenizedInput);
 
 
 

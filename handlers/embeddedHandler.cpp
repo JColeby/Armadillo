@@ -8,8 +8,10 @@ void embeddedHandler(vector<string>& tokenizedInput)
     {
         if (tokenizedInput[i].size() >= 3 and tokenizedInput[i].rfind("$(", 0) == 0)
         {
-            string command = tokenizedInput[i].substr(2, tokenizedInput[i].size() - 3);
-            command.pop_back();
+            string command = tokenizedInput[i].substr(2);
+            if (!command.empty() && command.back() == ')') {
+                command.pop_back();
+            }
 
             // create pipe and send it back into inputHandler
             HANDLE writeHandle, readHandle;

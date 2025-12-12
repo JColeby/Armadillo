@@ -6,7 +6,7 @@
 
 void pipeHandler(const vector<string>& tokenizedInput, HANDLE& finalWriteHandle) {
     vector<vector<string>> individualCommands = separateTokensByToken(tokenizedInput, "|");
-    if (individualCommands.size() == 1) { commandHandler(individualCommands[0], nullptr, nullptr, false); return; }
+    if (individualCommands.size() == 1) { commandHandler(individualCommands[0], nullptr, finalWriteHandle, false); return; }
 
     std::vector<std::thread> threads;
 
