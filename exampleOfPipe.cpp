@@ -1,6 +1,10 @@
 #include <windows.h>
 #include <iostream>
 
+
+
+// code that chat gave, which I was able to reverse engineer and implement into my central design.
+// also, why does windows make it so complicated?
 int main() {
     HANDLE hRead, hWrite;
     SECURITY_ATTRIBUTES sa = { sizeof(sa), NULL, TRUE };

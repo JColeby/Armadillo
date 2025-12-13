@@ -13,11 +13,10 @@ vector<string> tokenizeInput(const string& inputString, bool dontTokenizeEmbedde
     while (wordSeparator >> token) {
         if (token.empty()) { continue; }
 
-        if (dontTokenizeEmbedded and token.size() >= 2 and token.rfind("$(", 0) == 0) { // logic for quoted input. quotes will be automatically removed
-
+        // logic for embedded input.
+        if (dontTokenizeEmbedded and token.size() >= 2 and token.rfind("$(", 0) == 0) {
             int parenthesesCount = 0;
             string embeddedCommand;
-
             do { // gets next token until all parentheses are closed
                 for (char c : token) {
                     if (c == '(') parenthesesCount++;
@@ -25,40 +24,38 @@ vector<string> tokenizeInput(const string& inputString, bool dontTokenizeEmbedde
                 }
                 embeddedCommand += token + " ";
             } while (parenthesesCount != 0 and wordSeparator >> token);
-
             if (parenthesesCount != 0) {
                 std::cerr << "ERROR: unmatched parentheses in embedded command.\n";
                 return {};
             }
-
             embeddedCommand.pop_back(); // removes the additional whitespace that gets added to the end because of the loop
             tokens.push_back(embeddedCommand);
         }
 
 
-        else if (!token.empty() && token[0] == '"') { // logic for quoted input. quotes will be automatically removed
+        // logic for quoted input.
+        else if (!token.empty() && token[0] == '"') {
             string quotedToken;
-
-            do { // gets next token until we hit a word that ends with " or until the input ends
+            do { // gets next token until we hit a word that ends with "
                 quotedToken += token + " ";
             } while (token[token.size() - 1] != '"' and wordSeparator >> token);
-            quotedToken.pop_back(); // for some reason there is always an addition whitespace that gets thrown onto the end
-
+            quotedToken.pop_back(); // removes the additional whitespace that gets added to the end because of the loop
             if (token[token.size() - 1] != '"') {
                 std::cerr << "ERROR: unmatched quote in input.\n";
-                return {}; // or handle however you want
+                return {};
             }
-
             tokens.push_back(quotedToken);
         }
 
-        else { tokens.push_back(token); }
 
+        else { tokens.push_back(token); }
     }
     return tokens;
 }
 
 
+// tokenizes the input and deals with '&&' logic.
+// finalWriteHandle is so we can retrieve the output of embedded commands like this 'cmd1 $(cmd2) input'
 void inputHandler(const string& userInput, HANDLE& finalWriteHandle) {
     vector<string> tokens = tokenizeInput(userInput, true);
     if (tokens.empty()) { return; }
@@ -67,3 +64,4 @@ void inputHandler(const string& userInput, HANDLE& finalWriteHandle) {
         pipeHandler(command, finalWriteHandle);
     }
 }
+

@@ -6,7 +6,7 @@
 using std::string;
 using std::vector;
 
-
+// used to separate commands that have '&&' and '|' logic
 inline vector<vector<string>> separateTokensByToken(const vector<string>& tokenizedInput, const string separator) {
     vector<vector<string>> individualCommands = {};
     vector<string> commandTokens;

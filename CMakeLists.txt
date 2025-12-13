@@ -13,6 +13,11 @@ set(SHELL_SOURCES
         handlers/inputHandler.cpp
         handlers/pipeHandler.cpp
         TerminalFormatting.h
+        cmd/builtin/cd.cpp
+        cmd/builtin/alias.cpp
+        cmd/builtin/help.cpp
+        cmd/builtin/cmd.cpp
+        cmd/builtin/man.cpp
 )
 
 # -----------------------

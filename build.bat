@@ -6,26 +6,25 @@ set "ARMADILLO=%LOCALAPPDATA%\Armadillo"
 
 
 REM Create folders if they don't exist
-if not exist "%ARMADILLO%" mkdir "%ARMADILLO%"
-if not exist "%ARMADILLO%\cmd" mkdir "%ARMADILLO%\cmd"
-if not exist "%ARMADILLO%\resources" mkdir "%ARMADILLO%\resources"
+if exist "%ARMADILLO%" rmdir /s /q "%ARMADILLO%"
+mkdir "%ARMADILLO%"
+mkdir "%ARMADILLO%\cmd"
+mkdir "%ARMADILLO%\resources"
+mkdir "%ARMADILLO%\configurations"
 
 
-echo Copying Resources
+echo Copying Resources and configurations
 robocopy "resources" "%ARMADILLO%\resources" /E /MIR
-
-
-echo Copying Config Files
-copy "cmd\aliases.config" "%ARMADILLO%\cmd\aliases.config"
-copy "cmd\customList.config" "%ARMADILLO%\cmd\customList.config"
-copy "cmd\standardList.config" "%ARMADILLO%\cmd\standardList.config"
+robocopy "configurations" "%ARMADILLO%\configurations" /E /MIR
+robocopy "cmd\builtin\manuals" "%ARMADILLO%\cmd\builtinManuals" /E /MIR
 
 
 echo Compiling Main Executable
-g++ -std=c++17 -g armadillo.cpp Handlers\*.cpp -Iinclude -o "%ARMADILLO%\Ardo.exe"
+g++ -std=c++17 -g armadillo.cpp handlers\*.cpp cmd\builtin\*.cpp  -Iinclude -o "%ARMADILLO%\Ardo.exe"
 copy "%ARMADILLO%\Ardo.exe" "Ardo.exe"
 
-for /f "usebackq delims= eol=#" %%C in ("cmd\standardList.config") do (
+
+for /f "usebackq delims= eol=#" %%C in ("configurations\standardList.config") do (
 
     echo Compiling Standard Command %%C
     if not exist "%ARMADILLO%\cmd\standard\%%C" mkdir "%ARMADILLO%\cmd\standard\%%C"
@@ -38,7 +37,7 @@ for /f "usebackq delims= eol=#" %%C in ("cmd\standardList.config") do (
 )
 
 
-for /f "usebackq delims= eol=#" %%C in ("cmd\customList.config") do (
+for /f "usebackq delims= eol=#" %%C in ("configurations\customList.config") do (
 
     echo Compiling Custom Command %%C
     if not exist "%ARMADILLO%\cmd\custom\%%C" mkdir "%ARMADILLO%\cmd\custom\%%C"

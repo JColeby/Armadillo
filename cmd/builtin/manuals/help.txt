@@ -1,0 +1,7 @@
+
+    Help Command:
+        displays additional info about Armadillo
+
+    Syntax:
+        help
+

@@ -2,53 +2,96 @@
 #include "headers/embeddedHandler.h"
 #include "../path.h"
 #include "../commonFunctions/isStringInFile.h"
+#include "../cmd/builtin/headers/cd.h"
+#include "../cmd/builtin/headers/alias.h"
+#include "../cmd/builtin/headers/help.h"
+#include "../cmd/builtin/headers/cmd.h"
+#include "../cmd/builtin/headers/man.h"
+
+
+// evaluates and executes builtin commands
+bool evaluateBuiltins(vector<string>& tokenizedInput, HANDLE readHandle, HANDLE writeHandle)
+{
+    try {
+        string command = tokenizedInput[0];
+        if (command == "clear") {  system("cls"); return true; }
+        if (command == "cd") { cdMain(tokenizedInput, readHandle, writeHandle); return true; }
+        if (command == "alias") { aliasMain(tokenizedInput, readHandle, writeHandle); return true; }
+        if (command == "help") { helpMain(tokenizedInput, readHandle, writeHandle); return true; }
+        if (command == "cmd") { cmdMain(tokenizedInput, readHandle, writeHandle); return true; }
+        if (command == "man") { manMain(tokenizedInput, readHandle, writeHandle); return true; }
+    } catch (const std::exception& e) {
+        cerr << "ERROR: Builtin Command threw an error." << endl
+             << "error message: " << e.what() << endl;
+        return true;
+    } catch (...) {
+        cerr << "ERROR: Unknown error occurred when running a command" << endl;
+        return true;
+    }
+    return false;
+}
 
 
 
-
+// finds the path to the command executable.
+// Will first check to see if the command is an alias, to which it will update to the corresponding command
 string getCommandPath(string cmd)
 {
-    std::unordered_set<std::string> visited; // help prevent infinite alias loops
+    // checks if the command is inside the standard list. Builds the path if the command is found
+    if (!isStringInFile(cmd, ARDO_PATH + "/configurations/standardList.config", true).empty())
+    {
+        return ARDO_PATH + "\\cmd\\standard\\" + cmd + "\\" + cmd + ".exe";
+    }
 
-    string alias = isStringInFile(cmd + "->", ARDO_PATH + "/cmd/aliases.config", false );
-    while (!alias.empty())
+    // checks if the command is inside the custom list. Builds the path if the command is found
+    if (!isStringInFile(cmd, ARDO_PATH + "/configurations/customList.config", true).empty())
     {
-        if (visited.count(cmd)) {
-            std::cerr << "ERROR: Alias cycle detected involving '" << cmd << "'\n";
-            return "";
-        }
-        visited.insert(cmd);
+        return ARDO_PATH + "\\cmd\\custom\\" + cmd + "\\" + cmd + ".exe";
+    }
 
-        std::size_t pos = alias.find("->");
-        if (pos != std::string::npos) {
-            cmd = alias.substr(pos + 2); // +2 to skip "->"
-            cmd.erase(0, cmd.find_first_not_of(" \t")); // Remove leading spaces
-            cmd.erase(cmd.find_last_not_of(" \t") + 1); // Remove trailing spaces
-        } else {
-            std::cerr << "ERROR: Alias malformed. Could not execute the desired command" << endl;
-            return "";
-        }
-        alias = isStringInFile(cmd + "->", ARDO_PATH + "/cmd/aliases.config", false );
-    }
-    if (!isStringInFile(cmd, ARDO_PATH + "/cmd/standardList.config", true).empty())
-    {
-        return ARDO_PATH + "/cmd/standard/" + cmd + "/" + cmd + ".exe";
-    }
-    if (!isStringInFile(cmd, ARDO_PATH + "/cmd/customList.config", true).empty())
-    {
-        return ARDO_PATH + "/cmd/custom/" + cmd + "/" + cmd + ".exe";
-    }
+    // command could not be located ):
     std::cerr << "ERROR: Command '" + cmd + "' does not exist or isn't listed as a valid command/alias." << endl;
     return "";
 }
 
 
 
+// Will replace any command aliases with the corresponding command
+void updateAliases(vector<string>& tokenizedInput)
+{
+    string alias = isStringInFile(tokenizedInput[0] + "->", ARDO_PATH + "/configurations/aliases.config", false );
+    if (!alias.empty()) {
+        std::size_t pos = alias.find("->");
+        if (pos != std::string::npos) {
+            tokenizedInput[0] = alias.substr(pos + 2); // skip "->"
+            tokenizedInput[0].erase(0, tokenizedInput[0].find_first_not_of(" \t")); // Remove leading and trailing spaces
+            tokenizedInput[0].erase(tokenizedInput[0].find_last_not_of(" \t") + 1);
+        }
+    }
+}
+
+
+
+// finds and executes the desired command
 void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, bool closeWriteOnFinish)
 {
-    bool ownsReadHandle = (readHandle != nullptr);
+    bool ownsReadHandle = (readHandle != nullptr); // so we don't accidentally close stdin or stdout
     bool ownsWriteHandle = (writeHandle != nullptr);
+    if (readHandle == nullptr) { readHandle = GetStdHandle(STD_INPUT_HANDLE); }
+    if (writeHandle == nullptr) { writeHandle = GetStdHandle(STD_OUTPUT_HANDLE); }
 
+    embeddedHandler(tokenizedInput);
+    updateAliases(tokenizedInput);
+
+    // handling and running builtin commands
+    if (evaluateBuiltins(tokenizedInput, readHandle, writeHandle))
+    {
+        if (ownsReadHandle) { CloseHandle(readHandle); }
+        if (ownsWriteHandle and closeWriteOnFinish) { CloseHandle(writeHandle); }
+        return;
+    }
+
+    // getting our command path. If no path is found, we return early.
     string commandFilePath = getCommandPath(tokenizedInput[0]);
     if (commandFilePath.empty() or !std::filesystem::exists(commandFilePath)) {
         if (!commandFilePath.empty()) {
@@ -59,34 +102,24 @@ void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE wri
         return;
     }
 
-
-    // check and handle embedded commands!!!!
-    embeddedHandler(tokenizedInput);
-
-
-
     // setting up our command-line arguments to pass into the executable
     std::string cmdline = "\"" + commandFilePath + "\"";
     for (size_t i = 1; i < tokenizedInput.size(); i++) {
         cmdline += " " + tokenizedInput[i];
     }
 
-
-    if (readHandle == nullptr) { readHandle = GetStdHandle(STD_INPUT_HANDLE); }
-    if (writeHandle == nullptr) { writeHandle = GetStdHandle(STD_OUTPUT_HANDLE); }
-
-
+    // we pass this into CreateProcess so windows knows where to redirect the input and output of the new process
     STARTUPINFO si;
     ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
     si.dwFlags = STARTF_USESTDHANDLES;
-    si.hStdInput = readHandle;   // child reads from this
-    si.hStdOutput = writeHandle; // child's stdout normal
-    si.hStdError = GetStdHandle(STD_ERROR_HANDLE);
+    si.hStdInput = readHandle;
+    si.hStdOutput = writeHandle;
+    si.hStdError = GetStdHandle(STD_ERROR_HANDLE); // keeping this the same so the user knows about errors.
 
     PROCESS_INFORMATION pi;
 
-
+    // creating the new process
     if (!CreateProcess(NULL, cmdline.data(), NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi)) {
         std::cerr << "CreateProcess failed. Error: " << GetLastError() << "\n";
         if (ownsReadHandle) { CloseHandle(readHandle); }
@@ -94,9 +127,12 @@ void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE wri
         return;
     }
 
+    // waiting for the new process to finish
+    // TODO: add functionality that will terminate the running command if the user enters ctrl+k
     WaitForSingleObject(pi.hProcess, INFINITE);
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
+
 
     if (ownsReadHandle) { CloseHandle(readHandle); }
     if (ownsWriteHandle and closeWriteOnFinish) { CloseHandle(writeHandle); }

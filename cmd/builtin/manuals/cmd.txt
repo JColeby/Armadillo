@@ -1,0 +1,18 @@
+
+    Cmd Command:
+        will display a list of command names
+
+    Syntax:
+        cmd <flags>
+
+    Flags:
+        -b      will display builtin commands
+        -s      will display standard commands
+        -c      will display custom commands
+        -a      will display all commands in selected categories
+
+        -C      allows you to specify the number of commands that will be displayed in each category.
+                Next parameter must be a number
+
+    Capital letter flags expect an additional parameter right after, meaning they can't be combined with other capital letter flags
+

@@ -4,9 +4,11 @@
 #include <iostream>
 #include <windows.h>
 
+
+// allows you to more easily create a pipe.
 inline bool makePipe(HANDLE& writeHandle, HANDLE& readHandle) {
     SECURITY_ATTRIBUTES saAttr = { sizeof(SECURITY_ATTRIBUTES), nullptr, TRUE };
-    writeHandle = nullptr; // set these to nullptr so nothing straight up breaks if windows fails to create a pipe
+    writeHandle = nullptr; // set these to nullptr so nothing crashes if windows fails to create a pipe
     readHandle = nullptr;
 
     if (!CreatePipe(&readHandle, &writeHandle, &saAttr, 0)) { std::cerr << "Failed to create pipe. Exiting Early" << std::endl; return false; }

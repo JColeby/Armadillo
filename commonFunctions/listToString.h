@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+
+// takes in a list of strings and combines them into one, with each item separated by a newline
 inline std::string listToString(const std::vector<std::string>& items) {
     std::stringstream finalString;
     for (size_t i = 0; i < items.size(); ++i) {

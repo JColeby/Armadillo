@@ -3,7 +3,7 @@
 #include <fstream>
 
 
-// Loops through each line in a provided file and returns true if the start of a line matches the word you passed in
+// Loops through each line in a file and returns true if the start of a line matches the word you passed in
 inline string isStringInFile(const std::string& startOfLine, const std::string& filename, bool exactMatch)
 {
     std::ifstream file(filename);

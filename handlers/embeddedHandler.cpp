@@ -2,12 +2,15 @@
 #include "headers/inputHandler.h"
 #include "../commonFunctions/makePipe.h"
 
+
+// handles the logic for commands that are embedded into others
 void embeddedHandler(vector<string>& tokenizedInput)
 {
     for (int i = 0; i < tokenizedInput.size(); i++)
     {
         if (tokenizedInput[i].size() >= 3 and tokenizedInput[i].rfind("$(", 0) == 0)
         {
+            // remove syntax remnants
             string command = tokenizedInput[i].substr(2);
             if (!command.empty() && command.back() == ')') {
                 command.pop_back();

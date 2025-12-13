@@ -1,0 +1,7 @@
+
+    Alias Command:
+        will create a command alias
+
+    Syntax:
+        alias <newAlias> <command
+

@@ -1,0 +1,7 @@
+
+    cd Command:
+        will change the current working directory
+
+    Syntax:
+        cd <pathToNewDirectory>
+
