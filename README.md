@@ -1,13 +1,13 @@
-# Armadillo_Shell
-This is our final project for IT&C 344 Operating Systems.
+# Armadillo
+Originally was a group project in college that I decided to rework and add too.
 
 ## Installation
 * Clone the repository into a folder.
 * Install g++ on your preferred terminal. Here is a video to help with this step.<br>
 <https://www.youtube.com/watch?v=8CNRX1Bk5sY>
-* Inside the folder you cloned into, compile the repository for your computer using this command:
+* Inside the folder you cloned into, run the build.bat file. You can do this by running the following command in the terminal:
 ```
-g++ -std=c++17 -g armadillo.cpp Handlers/*.cpp inputLoop.cpp Globals/*.cpp -Iinclude -o Ardo.exe
+cmd.exe /C build.bat  
 ```
 
 ## Use

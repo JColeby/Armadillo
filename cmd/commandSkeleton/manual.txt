@@ -2,8 +2,7 @@ This is where the text for the manual page will be kept.
 always name the manual file "manual.txt" so the 'man' command will be able to find it.
 
 ***NOTICE***
-The name of the parent folder needs to match the name of the cpp file EXACTLY!!!
-Once you have created your command, add the name of the folder/cpp file to the customList.config
-file on it own line and rerun build.bat to create an executable.
-Don't tamper with the standard list unless you want to screw everything up.
+the directory name must match the command name, otherwise Armadillo will not be able to find your command.
+Once you have created your command, add the name of the folder/command to the customList.config file on it own line and rerun build.bat to create an executable.
+Don't tamper with the standard and builtin list unless you know what you are doing!!!
 Download and install custom commands from the internet at your own risk!!!
