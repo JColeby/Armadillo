@@ -2,6 +2,7 @@
 #include "headers/embeddedHandler.h"
 #include "../path.h"
 #include "../commonFunctions/isStringInFile.h"
+#include "../commonFunctions/drainPipe.h"
 #include "../cmd/builtin/headers/cd.h"
 #include "../cmd/builtin/headers/alias.h"
 #include "../cmd/builtin/headers/help.h"
@@ -71,6 +72,19 @@ void updateAliases(vector<string>& tokenizedInput)
 }
 
 
+void closeUpHandles(bool ownsReadHandle, bool ownsWriteHandle, HANDLE readHandle, HANDLE writeHandle, bool closeWriteOnFinish) {
+  if (ownsReadHandle) {
+    drainPipe(readHandle);  // empties out the pipe so the program can continue as normal
+    CloseHandle(readHandle);
+  }
+  if (ownsWriteHandle and closeWriteOnFinish) {
+    FlushFileBuffers(writeHandle); // makes sure everything gets read from the write handle
+    DisconnectNamedPipe(writeHandle);
+    CloseHandle(writeHandle);
+  }
+}
+
+
 
 // finds and executes the desired command
 void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, bool closeWriteOnFinish)
@@ -86,8 +100,7 @@ void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE wri
     // handling and running builtin commands
     if (evaluateBuiltins(tokenizedInput, readHandle, writeHandle))
     {
-        if (ownsReadHandle) { CloseHandle(readHandle); }
-        if (ownsWriteHandle and closeWriteOnFinish) { CloseHandle(writeHandle); }
+        closeUpHandles(ownsReadHandle, ownsWriteHandle, readHandle, writeHandle, closeWriteOnFinish);
         return;
     }
 
@@ -97,8 +110,7 @@ void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE wri
         if (!commandFilePath.empty()) {
             std::cerr << "ERROR: Command executable was not found. Expected path of executable: '" + commandFilePath + "'" << endl;
         }
-        if (ownsReadHandle) { CloseHandle(readHandle); }
-        if (ownsWriteHandle and closeWriteOnFinish) { CloseHandle(writeHandle); }
+        closeUpHandles(ownsReadHandle, ownsWriteHandle, readHandle, writeHandle, closeWriteOnFinish);
         return;
     }
 
@@ -122,19 +134,15 @@ void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE wri
     // creating the new process
     if (!CreateProcess(NULL, cmdline.data(), NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi)) {
         std::cerr << "CreateProcess failed. Error: " << GetLastError() << "\n";
-        if (ownsReadHandle) { CloseHandle(readHandle); }
-        if (ownsWriteHandle and closeWriteOnFinish) { CloseHandle(writeHandle); }
+        closeUpHandles(ownsReadHandle, ownsWriteHandle, readHandle, writeHandle, closeWriteOnFinish);
         return;
     }
 
     // waiting for the new process to finish
     // TODO: add functionality that will terminate the running command if the user enters ctrl+k
     WaitForSingleObject(pi.hProcess, INFINITE);
+    closeUpHandles(ownsReadHandle, ownsWriteHandle, readHandle, writeHandle, closeWriteOnFinish);
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
-
-
-    if (ownsReadHandle) { CloseHandle(readHandle); }
-    if (ownsWriteHandle and closeWriteOnFinish) { CloseHandle(writeHandle); }
 
 }

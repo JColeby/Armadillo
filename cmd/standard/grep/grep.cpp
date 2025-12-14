@@ -3,6 +3,7 @@
 #include <iostream>
 #include <regex>
 #include <sstream>
+#include <unistd.h>
 #include "../../../commonFunctions/removeQuotes.h"
 #include "../../../TerminalFormatting.h"
 
@@ -24,7 +25,6 @@ struct Options {
 
 
 bool validateSyntaxAndSetFlags(std::vector<std::string> &tokenizedInput, Options& opt) {
-    if (tokenizedInput.size() < 2) { return false; }
     int nonFlagCount = 0;
     for (size_t i = 1; i < tokenizedInput.size(); i++) {
         const string& param = tokenizedInput[i];
@@ -44,7 +44,8 @@ bool validateSyntaxAndSetFlags(std::vector<std::string> &tokenizedInput, Options
           nonFlagCount++;
         }
     }
-    return true;
+
+    return nonFlagCount >= 1;
 }
 
 
@@ -66,31 +67,33 @@ int main(int argc, char* argv[]) {
       string line;
       std::smatch match;
 
-      // if a string was passed in
-      if (!opt.input.empty()) {
-        std::stringstream inputString(opt.input);
-        while (std::getline(inputString, line)) { // Read line by line until end of stream
+      // if our input is piped
+      if (!isatty(fileno(stdin))) {
+        while (std::getline(std::cin, line)) {
           bool matchFound = std::regex_search(line, match, regExpression);
-          if ((matchFound and !opt.dontIncludeRegex) or (!matchFound and opt.dontIncludeRegex)) {
+          if ((matchFound && !opt.dontIncludeRegex) || (!matchFound && opt.dontIncludeRegex)) {
             cout << line << "\n";
           }
         }
       }
-
-      // if no string was passed in, we read from cin instead
-      else {
-        while (std::getline(std::cin, line)) { // Read line by line until end of stream
+      else if (!opt.input.empty()) {
+        std::stringstream inputString(opt.input);
+        while (std::getline(inputString, line)) {
           bool matchFound = std::regex_search(line, match, regExpression);
-          if ((matchFound and !opt.dontIncludeRegex) or (!matchFound and opt.dontIncludeRegex)) {
+          if ((matchFound && !opt.dontIncludeRegex) || (!matchFound && opt.dontIncludeRegex)) {
             cout << line << "\n";
           }
         }
+      }
+      else {
+        cerr << "No input provided\n";
+        return EXIT_FAILURE;
       }
 
       return 0;
     }
     catch (const std::regex_error& e) {
       cerr << "Invalid regular expression: " << e.what();
-      return -1;
+      return EXIT_FAILURE;
     }
 }

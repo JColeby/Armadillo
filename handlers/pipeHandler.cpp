@@ -4,6 +4,7 @@
 #include "../commonFunctions/makePipe.h"
 
 
+
 // creates a pipe and passes in the read+write handles to commandHandler, which will execute the corresponding commands
 void pipeHandler(const vector<string>& tokenizedInput, HANDLE& finalWriteHandle) {
     vector<vector<string>> individualCommands = separateTokensByToken(tokenizedInput, "|");

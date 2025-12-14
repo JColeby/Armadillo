@@ -1,6 +1,8 @@
 #include "headers/embeddedHandler.h"
 #include "headers/inputHandler.h"
 #include "../commonFunctions/makePipe.h"
+#include "../commonFunctions/drainPipe.h"
+
 
 
 // handles the logic for commands that are embedded into others
@@ -20,22 +22,9 @@ void embeddedHandler(vector<string>& tokenizedInput)
             HANDLE writeHandle, readHandle;
             makePipe(writeHandle, readHandle);
             inputHandler(command, writeHandle);
+            string result = "\"" + drainPipe(readHandle) + "\"";
+            DisconnectNamedPipe(writeHandle);
             CloseHandle(writeHandle);
-
-            // Create a buffer to read from the stdout of the embedded command
-            const DWORD bufferSize = 4096;
-            char buffer[bufferSize];
-            DWORD bytesRead = 0;
-            string result = "\"";
-
-            // Read until there’s nothing left
-            while (true) {
-                BOOL success = ReadFile(readHandle, buffer, bufferSize, &bytesRead, nullptr);
-                if (!success || bytesRead == 0) break; // pipe closed or error
-                result.append(buffer, bytesRead);
-            }
-
-            result.append("\"");
 
             tokenizedInput[i] = result;
         }
