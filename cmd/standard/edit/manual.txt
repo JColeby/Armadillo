@@ -1,0 +1,15 @@
+
+    Edit Command:
+        allows you to edit a file
+
+    Syntax:
+        edit <filepath>
+
+    How to use:
+        use arrow keys to move cursor
+        ctrl+x - exits the document. will prompt you to save if needed
+        ctrl+o - saves the file. unfortunately ctrl+s wouldn't work because windows is silly
+
+    Additional info:
+        if the provided filepath doesn't exist, a new file will be created at that location the next time you save.
+

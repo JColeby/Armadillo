@@ -1,0 +1,10 @@
+
+    List Command:
+        Displays files and directories in the current working directory
+
+    Syntax:
+        ls <flags>
+
+    Flags:
+        -a  displays hidden contents of current directory
+

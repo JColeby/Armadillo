@@ -1,0 +1,13 @@
+
+    Grep Command:
+        stands for Global Regular Expression Print. Uses regular expressions to filter text
+
+    Syntax:
+        grep <flags> <regex> <stringOfText>
+
+    Flags:
+        -v     inverts matches
+        -i     ignores casing
+
+    don't include <stringOfText> if you are piping output into grep
+

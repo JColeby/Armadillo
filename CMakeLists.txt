@@ -27,4 +27,8 @@ add_executable(Ardo
         armadillo.cpp
         ${SHELL_SOURCES}
 )
+
 add_executable(example cmd/custom/example/example.cpp)
+add_executable(ls cmd/standard/ls/ls.cpp)
+add_executable(grep cmd/standard/grep/grep.cpp)
+add_executable(edit cmd/standard/edit/edit.cpp)
