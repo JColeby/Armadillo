@@ -20,6 +20,13 @@ using std::ifstream;
 using namespace VT;
 
 
+// used to ensure text from cerr is RED
+struct RedCerrANSI {
+  RedCerrANSI() { std::cerr << RED; }
+  ~RedCerrANSI() { std::cerr << RESET_TEXT; }
+};
+
+
 // Makes sure Ardo can find all the essential files before starting.
 // Will refactor this later so there isn't as much duplicate code
 int validatePathStructure() {
@@ -64,7 +71,7 @@ void displayLogoAndASCII()
         string armadilloASCII = getTextFile(ARDO_PATH + "/resources/armadilloASCII.txt");
         cout << YELLOW << armadilloASCII << RESET_TEXT;
     } else {
-        cout << endl << RED << "ERROR: Failed to display ASCII art. '" << ARDO_PATH << "/resources/armadilloASCII.txt' does not exist." << endl << RESET_TEXT;
+        cerr << endl << "ERROR: Failed to display ASCII art. '" << ARDO_PATH << "/resources/armadilloASCII.txt' does not exist." << endl;
     }
 
     cout << "##########################################################################################";
@@ -73,7 +80,7 @@ void displayLogoAndASCII()
         string armadilloLogo = getTextFile(ARDO_PATH + "/resources/armadilloLogo.txt");
         cout << BLUE << armadilloLogo << RESET_TEXT;
     } else {
-        cout << endl << RED << "ERROR: Failed to display Logo. '" << ARDO_PATH << "/resources/armadilloLogo.txt' does not exist." << endl << RESET_TEXT;
+        cerr << endl << "ERROR: Failed to display Logo. '" << ARDO_PATH << "/resources/armadilloLogo.txt' does not exist." << endl;
     }
 
     cout << "##########################################################################################" << endl << endl;
@@ -107,15 +114,6 @@ int inputLoop() {
         getline(cin, input);
         if (input == "exit") { return 0; }
         inputHandler(input, finalWriteHandle);
-        // runningCommand = true;
-        // thread t(inputHandler, input);
-        // while (runningCommand) {
-        //     bool ctrlDown = GetAsyncKeyState(VK_CONTROL) & 0x8000; // 0x8000 means the key is currently being pressed
-        //     bool qDown = GetAsyncKeyState('Q') & 0x8000;
-        //     if (ctrlDown && qDown) { killSwitch = true; }
-        // }
-        // t.join();
-        // killSwitch = false;
     }
 }
 
@@ -129,9 +127,11 @@ int main() {
     DWORD newMode = originalMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOut, newMode);
 
+    // making cerr display with red text
+    static RedCerrANSI redCerr;
+
     // validating that we have all the essential files
-    int pathValidation = validatePathStructure();
-    if (pathValidation == -1) {
+    if (validatePathStructure() == -1) {
         SetConsoleMode(hOut, originalMode);
         return -1;
     }

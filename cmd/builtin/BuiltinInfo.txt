@@ -1,0 +1,5 @@
+All builtin functions should take in 4 parameters: tokenizedInput, readHandle, writeHandle, and errorHandle
+tokenizedInput contains the paramaters for the command. The handles correspond to the commands stdin, stdout, and stderr
+
+When builtins want to display output or error messages, they will call the writeToPipe function and pass in the corresponding handle.
+The reason we do this is because we can't set the stdin, stderr, or stdout of one thread without changing it for all the threads in the current process.

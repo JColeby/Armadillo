@@ -18,6 +18,7 @@ set(SHELL_SOURCES
         cmd/builtin/help.cpp
         cmd/builtin/cmd.cpp
         cmd/builtin/man.cpp
+        handlers/redirectionHandler.cpp
 )
 
 # -----------------------

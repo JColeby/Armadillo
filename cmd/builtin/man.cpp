@@ -8,10 +8,10 @@
 
 using namespace VT;
 
-int manMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle)
+int manMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle)
 {
     if (tokenizedInput.size() != 2) {
-        cerr << "ERROR: Incorrect number of arguments. Command syntax: man <command>" << endl;
+        writeToPipe(errorHandle, "ERROR: Incorrect number of arguments. Command syntax: man <command>\n");
         return -1;
     }
 
@@ -27,11 +27,11 @@ int manMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle
     }
 
     if (path.empty()) {
-        cerr << "ERROR: Not a valid command name." << endl;
+        writeToPipe(errorHandle, "ERROR: Not a valid command name.\n");
         return -1;
     }
     if (!std::filesystem::exists(path)) {
-        cerr << "ERROR: manual file not found. Expected path: " << path << endl;
+        writeToPipe(errorHandle, "ERROR: manual file not found. Expected path: " + path + "\n");
         return -1;
     }
 

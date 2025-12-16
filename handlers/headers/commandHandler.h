@@ -12,4 +12,4 @@ using std::vector;
 using std::cout;
 using std::endl;
 
-void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, bool closeWriteOnFinish);
+void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle, bool closeWriteOnFinish);

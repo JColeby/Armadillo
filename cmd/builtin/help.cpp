@@ -5,7 +5,7 @@
 
 using namespace VT;
 
-int helpMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle)
+int helpMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle)
 {
     std::stringstream helpText;
     helpText << WHITE << "  - press ctrl+k to terminate any active command (may result in memory leaks)" << endl;

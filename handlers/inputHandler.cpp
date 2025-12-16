@@ -54,14 +54,20 @@ vector<string> tokenizeInput(const string& inputString, bool dontTokenizeEmbedde
 }
 
 
-// tokenizes the input and deals with '&&' logic.
+// tokenizes the input and deals with '&&' logic. will update in the future so it works properly
 // finalWriteHandle is so we can retrieve the output of embedded commands like this 'cmd1 $(cmd2) input'
 void inputHandler(const string& userInput, HANDLE& finalWriteHandle) {
     vector<string> tokens = tokenizeInput(userInput, true);
     if (tokens.empty()) { return; }
     vector<vector<string>> individualCommands = separateTokensByToken(tokens, "&&");
-    for (vector<string> command : individualCommands) {
+    try {
+      for (vector<string> command : individualCommands) {
         pipeHandler(command, finalWriteHandle);
+      }
     }
+    catch (std::runtime_error& e) {
+      cerr << e.what() << endl;
+    }
+
 }
 

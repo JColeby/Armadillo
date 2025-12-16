@@ -12,4 +12,4 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-int cmdMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle);
+int cmdMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle);

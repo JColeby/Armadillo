@@ -22,10 +22,11 @@ void embeddedHandler(vector<string>& tokenizedInput)
             HANDLE writeHandle, readHandle;
             makePipe(writeHandle, readHandle);
             inputHandler(command, writeHandle);
-            string result = "\"" + drainPipe(readHandle) + "\"";
-            DisconnectNamedPipe(writeHandle);
-            CloseHandle(writeHandle);
 
+            // save the command output as a string and place it back into the command
+            CloseHandle(writeHandle);
+            string result = "\"" + drainPipe(readHandle) + "\"";
+            CloseHandle(readHandle);
             tokenizedInput[i] = result;
         }
     }

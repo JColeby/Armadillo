@@ -17,7 +17,7 @@ struct Options {
 // I recommend setting flags and interpreting input like this.
 bool validateSyntaxAndSetFlags(std::vector<std::string> &tokenizedInput, Options& opt) {
 
-  if (tokenizedInput.size() < 2) { return false; }  // check that you don't have too few arguments
+  if (tokenizedInput.size() < 1) { return false; }  // check that you don't have too few arguments
 
   int nonFlagCount = 0;
   for (size_t i = 1; i < tokenizedInput.size(); i++) { // looping through each parameter

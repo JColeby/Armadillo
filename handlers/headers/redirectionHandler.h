@@ -5,11 +5,12 @@
 #include <windows.h>
 #include <filesystem>
 #include <fstream>
+#include <unordered_set>
 
 using std::string;
 using std::vector;
 using std::cout;
-using std::cerr;
 using std::endl;
+using std::cerr;
 
-int helpMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle);
+void redirectionHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, bool closeWriteOnFinish);

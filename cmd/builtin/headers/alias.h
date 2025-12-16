@@ -12,4 +12,4 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-int aliasMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle);
+int aliasMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle);

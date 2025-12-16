@@ -61,10 +61,15 @@ void readAndAddToSet(std::set<string>& commands, string commandFile)
 }
 
 
-int cmdMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle)
+int cmdMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle)
 {
     try { evaluateFlags(tokenizedInput); }
-    catch (std::runtime_error& e) { cerr << e.what() << endl; return -1; }
+    catch (std::runtime_error& e) {
+      std::stringstream errorMessage;
+      errorMessage << e.what() << endl;
+      writeToPipe(errorHandle, errorMessage.str());
+      return -1;
+    }
 
     std::set<string> commands;
     std::stringstream output;

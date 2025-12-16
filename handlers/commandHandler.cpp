@@ -11,16 +11,16 @@
 
 
 // evaluates and executes builtin commands
-bool evaluateBuiltins(vector<string>& tokenizedInput, HANDLE readHandle, HANDLE writeHandle)
+bool evaluateBuiltins(vector<string>& tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle)
 {
     try {
         string command = tokenizedInput[0];
         if (command == "clear") {  system("cls"); return true; }
-        if (command == "cd") { cdMain(tokenizedInput, readHandle, writeHandle); return true; }
-        if (command == "alias") { aliasMain(tokenizedInput, readHandle, writeHandle); return true; }
-        if (command == "help") { helpMain(tokenizedInput, readHandle, writeHandle); return true; }
-        if (command == "cmd") { cmdMain(tokenizedInput, readHandle, writeHandle); return true; }
-        if (command == "man") { manMain(tokenizedInput, readHandle, writeHandle); return true; }
+        if (command == "cd") { cdMain(tokenizedInput, readHandle, writeHandle, errorHandle); return true; }
+        if (command == "alias") { aliasMain(tokenizedInput, readHandle, writeHandle, errorHandle); return true; }
+        if (command == "help") { helpMain(tokenizedInput, readHandle, writeHandle, errorHandle); return true; }
+        if (command == "cmd") { cmdMain(tokenizedInput, readHandle, writeHandle, errorHandle); return true; }
+        if (command == "man") { manMain(tokenizedInput, readHandle, writeHandle, errorHandle); return true; }
     } catch (const std::exception& e) {
         cerr << "ERROR: Builtin Command threw an error." << endl
              << "error message: " << e.what() << endl;
@@ -72,7 +72,7 @@ void updateAliases(vector<string>& tokenizedInput)
 }
 
 
-void closeUpHandles(bool ownsReadHandle, bool ownsWriteHandle, HANDLE readHandle, HANDLE writeHandle, bool closeWriteOnFinish) {
+void closeUpHandles(bool ownsReadHandle, bool ownsWriteHandle, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle, bool closeWriteOnFinish) {
   if (ownsReadHandle) {
     drainPipe(readHandle);  // empties out the pipe so the program can continue as normal
     CloseHandle(readHandle);
@@ -82,25 +82,26 @@ void closeUpHandles(bool ownsReadHandle, bool ownsWriteHandle, HANDLE readHandle
     DisconnectNamedPipe(writeHandle);
     CloseHandle(writeHandle);
   }
+  if (errorHandle != GetStdHandle(STD_ERROR_HANDLE)) { CloseHandle(errorHandle); }
 }
 
 
 
 // finds and executes the desired command
-void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, bool closeWriteOnFinish)
+void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle, bool closeWriteOnFinish)
 {
     bool ownsReadHandle = (readHandle != nullptr); // so we don't accidentally close stdin or stdout
     bool ownsWriteHandle = (writeHandle != nullptr);
     if (readHandle == nullptr) { readHandle = GetStdHandle(STD_INPUT_HANDLE); }
     if (writeHandle == nullptr) { writeHandle = GetStdHandle(STD_OUTPUT_HANDLE); }
+    if (errorHandle == nullptr) { errorHandle = GetStdHandle(STD_ERROR_HANDLE); }
 
-    embeddedHandler(tokenizedInput);
+    embeddedHandler(tokenizedInput); // we first evaluate any embedded commands
     updateAliases(tokenizedInput);
 
     // handling and running builtin commands
-    if (evaluateBuiltins(tokenizedInput, readHandle, writeHandle))
-    {
-        closeUpHandles(ownsReadHandle, ownsWriteHandle, readHandle, writeHandle, closeWriteOnFinish);
+    if (evaluateBuiltins(tokenizedInput, readHandle, writeHandle, errorHandle)) {
+        closeUpHandles(ownsReadHandle, ownsWriteHandle, readHandle, writeHandle, errorHandle, closeWriteOnFinish);
         return;
     }
 
@@ -110,7 +111,7 @@ void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE wri
         if (!commandFilePath.empty()) {
             std::cerr << "ERROR: Command executable was not found. Expected path of executable: '" + commandFilePath + "'" << endl;
         }
-        closeUpHandles(ownsReadHandle, ownsWriteHandle, readHandle, writeHandle, closeWriteOnFinish);
+        closeUpHandles(ownsReadHandle, ownsWriteHandle, readHandle, writeHandle, errorHandle, closeWriteOnFinish);
         return;
     }
 
@@ -127,21 +128,21 @@ void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE wri
     si.dwFlags = STARTF_USESTDHANDLES;
     si.hStdInput = readHandle;
     si.hStdOutput = writeHandle;
-    si.hStdError = GetStdHandle(STD_ERROR_HANDLE); // keeping this the same so the user knows about errors.
+    si.hStdError = errorHandle;
 
     PROCESS_INFORMATION pi;
 
     // creating the new process
     if (!CreateProcess(NULL, cmdline.data(), NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi)) {
         std::cerr << "CreateProcess failed. Error: " << GetLastError() << "\n";
-        closeUpHandles(ownsReadHandle, ownsWriteHandle, readHandle, writeHandle, closeWriteOnFinish);
+        closeUpHandles(ownsReadHandle, ownsWriteHandle, readHandle, writeHandle, errorHandle, closeWriteOnFinish);
         return;
     }
 
     // waiting for the new process to finish
     // TODO: add functionality that will terminate the running command if the user enters ctrl+k
     WaitForSingleObject(pi.hProcess, INFINITE);
-    closeUpHandles(ownsReadHandle, ownsWriteHandle, readHandle, writeHandle, closeWriteOnFinish);
+    closeUpHandles(ownsReadHandle, ownsWriteHandle, readHandle, writeHandle, errorHandle, closeWriteOnFinish);
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
 
