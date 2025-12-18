@@ -1,0 +1,11 @@
+
+    Process Command:
+        will show all the processes currently running.
+
+    Syntax:
+        process <flags>
+
+    Flags:
+        -h      hides duplicate processes that are from the same executable
+        -f      displays the full filepath
+

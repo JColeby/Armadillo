@@ -1,0 +1,7 @@
+
+    Pwd Command:
+        Prints the working directory. More of an Easter egg than anything
+
+    Syntax:
+        pwd
+

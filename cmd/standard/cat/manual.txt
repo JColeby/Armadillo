@@ -1,0 +1,7 @@
+
+    Cat Command:
+        will display the contents of a file
+
+    Syntax:
+        cat <filename>
+

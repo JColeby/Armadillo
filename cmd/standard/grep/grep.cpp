@@ -4,7 +4,6 @@
 #include <regex>
 #include <sstream>
 #include <unistd.h>
-#include "../../../commonFunctions/removeQuotes.h"
 
 using std::string;
 using std::vector;
@@ -29,7 +28,7 @@ bool validateSyntaxAndSetFlags(std::vector<std::string> &tokenizedInput, Options
                 switch (param[j]) {
                     case 'v': opt.dontIncludeRegex = true; break;
                     case 'i': opt.notCaseSensitive = true; break;
-                    default: cerr << "SYNTAX ERROR: Unexpected flag -" << param[j]; return false;
+                    default: cerr << "SYNTAX ERROR: Unexpected flag -" << param[j] << endl; return false;
                 }
             }
         }
@@ -37,12 +36,12 @@ bool validateSyntaxAndSetFlags(std::vector<std::string> &tokenizedInput, Options
           switch (nonFlagCount) {
             case 0: opt.regularExpression = param; break;
             case 1: opt.input = param; break;
-            default: cerr << "SYNTAX ERROR: Too many arguments provided"; return false;
+            default: cerr << "SYNTAX ERROR: Too many arguments provided" << endl; return false;
           }
           nonFlagCount++;
         }
     }
-    if (nonFlagCount < 1) { cerr << "SYNTAX ERROR: Too few arguments. "; return false; }
+    if (nonFlagCount < 1) { cerr << "SYNTAX ERROR: Too few arguments." << endl; return false; }
     return true;
 }
 
@@ -51,7 +50,6 @@ int main(int argc, char* argv[]) {
     Options opt;
     vector<string> tokenizedInput(argv, argv + argc);
 
-    removeQuotesFromVector(tokenizedInput);
     if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { return -1; }
 
     try {

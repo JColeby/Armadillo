@@ -50,6 +50,11 @@ bool evaluateFlags(vector<string> tokenizedInput, Options& opt) {
                 }
             }
         }
+        else {
+          std::stringstream errorMessage;
+          errorMessage << "additional parameters were provided when none were expected";
+          throw std::runtime_error(errorMessage.str());
+        }
     }
     if (!opt.getBuiltin and !opt.getStandard and !opt.getCustom) {
         opt.getBuiltin = true;

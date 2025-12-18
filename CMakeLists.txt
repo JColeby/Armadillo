@@ -30,7 +30,16 @@ add_executable(Ardo
         ${SHELL_SOURCES}
 )
 
+
+if (WIN32)
+    target_link_libraries(Ardo PRIVATE Psapi)
+endif()
+
 add_executable(example cmd/custom/example/example.cpp)
 add_executable(ls cmd/standard/ls/ls.cpp)
 add_executable(grep cmd/standard/grep/grep.cpp)
 add_executable(edit cmd/standard/edit/edit.cpp)
+add_executable(pwd cmd/standard/pwd/pwd.cpp)
+add_executable(cat cmd/standard/cat/cat.cpp)
+add_executable(ps cmd/standard/ps/ps.cpp)
+add_executable(sys cmd/standard/sys/sys.cpp)

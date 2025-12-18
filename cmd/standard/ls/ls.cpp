@@ -1,10 +1,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <windows.h>
 #include <filesystem>
 #include <fstream>
-#include "../../../commonFunctions/removeQuotes.h"
 #include "../../../TerminalFormatting.h"
 
 using std::string;
@@ -57,7 +55,6 @@ int main(int argc, char* argv[]) {
     Options opt;
     std::vector<std::string> tokenizedInput(argv, argv + argc);
 
-    removeQuotesFromVector(tokenizedInput);
     if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { return -1; }
 
     std::stringstream output;
