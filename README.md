@@ -23,3 +23,35 @@ help
 ```
 man <command>
 ```
+<hr>
+
+# Configurations
+The configurations folder contains all the configuration information for Armadillo.
+**PLEASE READ BEFORE EDITING ANYTHING**
+
+## List Configuration Files
+The list configuration files are used by build.bat, which tells it the names of the files to be compiled.
+If Armadillo can't find a custom or standard command, it's likely because you removed a line when compiling or you added the executable to the wrong folder.
+
+## aliases.config
+This contains all the command aliases for armadillo.
+Aliases can be added directly from the shell using the following command:
+```
+alias <newAlias> <command>
+```
+If you want to add an alias manually, add a new line to the file using the following syntax:
+```
+alias->command
+```
+Make sure there are no spaces before and after the arrow!!!
+<hr>
+
+#Adding your own Custom Commands
+If you want to create your own command, feel free to copy the cmd/custom/example template folder
+always name the manual file "manual.txt" so the 'man' command will be able to find it.
+
+***NOTICE***
+the directory name must match the command name, otherwise Armadillo will not be able to find your command.
+Once you have created your command, add the name of the folder/command to the customList.config file on it own line and rerun build.bat to create an executable.
+Don't tamper with the standard and builtin list unless you know what you are doing!!!
+Download and install custom commands from the internet at your own risk!!!

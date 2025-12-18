@@ -5,16 +5,12 @@
 #include <sstream>
 #include <unistd.h>
 #include "../../../commonFunctions/removeQuotes.h"
-#include "../../../TerminalFormatting.h"
 
 using std::string;
 using std::vector;
 using std::cout;
 using std::cerr;
 using std::endl;
-
-using namespace VT;
-
 
 struct Options {
   bool dontIncludeRegex = false;
@@ -31,21 +27,23 @@ bool validateSyntaxAndSetFlags(std::vector<std::string> &tokenizedInput, Options
         if (param[0] == '-') {
             for (int j = 1; j < param.size(); j++) {
                 switch (param[j]) {
-                case 'v': opt.dontIncludeRegex = true; break;
-                case 'i': opt.notCaseSensitive = true; break;
-                default: break;
+                    case 'v': opt.dontIncludeRegex = true; break;
+                    case 'i': opt.notCaseSensitive = true; break;
+                    default: cerr << "SYNTAX ERROR: Unexpected flag -" << param[j]; return false;
                 }
             }
         }
         else {
-          if (nonFlagCount == 0) { opt.regularExpression = param; }
-          else if (nonFlagCount == 1) { opt.input = param; }
-          else { return false; }
+          switch (nonFlagCount) {
+            case 0: opt.regularExpression = param; break;
+            case 1: opt.input = param; break;
+            default: cerr << "SYNTAX ERROR: Too many arguments provided"; return false;
+          }
           nonFlagCount++;
         }
     }
-
-    return nonFlagCount >= 1;
+    if (nonFlagCount < 1) { cerr << "SYNTAX ERROR: Too few arguments. "; return false; }
+    return true;
 }
 
 

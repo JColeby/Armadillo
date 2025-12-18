@@ -1,9 +1,56 @@
 #pragma once
 #include <string>
+#include <windows.h>
 
 // Use these to add custom colors to your text
+// make sure to call verify with the color so you don't end up writing escape codes to places that don't support it!!!
 
 namespace VT {
+    // use to verify that stdout supports virtual color codes.
+    // will return the color if supported
+    inline const char* verify(const char* colorCode) {
+      HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+      DWORD consoleMode = 0;
+      GetConsoleMode(hOut, &consoleMode);
+      if (consoleMode & ENABLE_VIRTUAL_TERMINAL_PROCESSING) {
+        return colorCode;
+      }
+      return "";
+    }
+
+    // use to verify that stdout supports virtual color codes.
+    // will return the color if supported
+    inline bool verify() {
+      HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+      DWORD consoleMode = 0;
+      GetConsoleMode(hOut, &consoleMode);
+      if (consoleMode & ENABLE_VIRTUAL_TERMINAL_PROCESSING) {
+        return true;
+      }
+      return false;
+    }
+
+    // use to verify that the handle supports virtual color codes.
+    // will return the color if supported
+    inline const char* verify(const char* colorCode, HANDLE hOut) {
+      DWORD consoleMode = 0;
+      GetConsoleMode(hOut, &consoleMode);
+      if (consoleMode & ENABLE_VIRTUAL_TERMINAL_PROCESSING) {
+        return colorCode;
+      }
+      return "";
+    }
+
+    // use to verify that the handle supports virtual color codes.
+    // will return the color if supported
+    inline bool verify(HANDLE hOut) {
+      DWORD consoleMode = 0;
+      GetConsoleMode(hOut, &consoleMode);
+      if (consoleMode & ENABLE_VIRTUAL_TERMINAL_PROCESSING) {
+        return true;
+      }
+      return false;
+    }
 
     // --- Base ESC prefix ---
     constexpr const char* ESC = "\x1b[";

@@ -1,0 +1,7 @@
+
+    Clear Command:
+        will clear the screen so you can see things clearly again.
+
+    Syntax:
+        clear
+

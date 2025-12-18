@@ -1,0 +1,7 @@
+
+    Echo Command:
+        prints a string to the terminal/stdout.
+
+    Syntax:
+        echo <string>
+

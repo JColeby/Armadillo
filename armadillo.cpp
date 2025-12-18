@@ -44,12 +44,6 @@ int validatePathStructure() {
     if (!std::filesystem::exists(ARDO_PATH + "/configurations/aliases.config")) {
         missing << "  'configurations\\aliases.config'" << endl;
     }
-    if (!std::filesystem::exists(ARDO_PATH + "/configurations/customList.config")) {
-        missing << "  'configurations\\customList.config'" << endl;
-    }
-    if (!std::filesystem::exists(ARDO_PATH + "/configurations/standardList.config")) {
-        missing << "  'configurations\\standardList.config'" << endl;
-    }
 
     string missingPaths = missing.str();
     if (!missingPaths.empty()) {

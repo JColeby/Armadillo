@@ -6,11 +6,10 @@ set "ARMADILLO=%LOCALAPPDATA%\Armadillo"
 
 
 REM Create folders if they don't exist
-if exist "%ARMADILLO%" rmdir /s /q "%ARMADILLO%"
-mkdir "%ARMADILLO%"
-mkdir "%ARMADILLO%\cmd"
-mkdir "%ARMADILLO%\resources"
-mkdir "%ARMADILLO%\configurations"
+if not exist "%ARMADILLO%" mkdir "%ARMADILLO%"
+if not exist "%ARMADILLO%\cmd" mkdir "%ARMADILLO%\cmd"
+if not exist "%ARMADILLO%\resources" mkdir "%ARMADILLO%\resources"
+if not exist "%ARMADILLO%\configurations" mkdir "%ARMADILLO%\configurations"
 
 
 echo Copying Resources and configurations

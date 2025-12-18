@@ -1,7 +1,10 @@
 #include "headers/pipeHandler.h"
 #include "headers/redirectionHandler.h"
 #include "../commonFunctions/separateTokensByToken.h"
-#include "../commonFunctions/makePipe.h"
+#include "../commonFunctions/handleIO.h"
+
+
+using HDL::makePipe;
 
 
 

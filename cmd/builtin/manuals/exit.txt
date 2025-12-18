@@ -1,0 +1,7 @@
+
+    Exit Command:
+        will terminate Armadillo.
+
+    Syntax:
+        exit
+

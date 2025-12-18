@@ -63,6 +63,19 @@ int main(int argc, char* argv[]) {
     std::stringstream output;
 
     try {
+      // making sure color is supported
+      const char* cyan = "";
+      const char* yellow = "";
+      const char* green = "";
+      const char* reset = "";
+
+      if (verify()) {
+        cyan = CYAN;
+        yellow = YELLOW;
+        green = GREEN;
+        reset = RESET_TEXT;
+      }
+
       for (const auto &entry : fs::directory_iterator(opt.directory)) {
         std::string name = entry.path().filename().string();
 
@@ -72,10 +85,10 @@ int main(int argc, char* argv[]) {
         if (!opt.showAll and (attributes & FILE_ATTRIBUTE_HIDDEN) != 0) { continue; }
         if (!opt.showAll and !name.empty() and name[0] == '.') { continue; }
 
-        if (entry.is_directory()) { output << CYAN; }
-        else if (endsWith(name, ".exe")) { output << YELLOW; }
-        else if (endsWith(name, ".ardo")) { output << GREEN; }
-        output << " " << name << RESET_TEXT << "\n";
+        if (entry.is_directory()) { output << cyan; }
+        else if (endsWith(name, ".exe")) { output << yellow; }
+        else if (endsWith(name, ".ardo")) { output << green; }
+        output << " " << name << reset << "\n";
       }
     }
     catch (const fs::filesystem_error &e) {

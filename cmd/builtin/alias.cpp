@@ -1,30 +1,31 @@
-#include <fstream>
 #include "headers/alias.h"
 #include "../../commonFunctions/isStringInFile.h"
-#include "../../commonFunctions/writeToPipe.h"
+#include "../../commonFunctions/handleIO.h"
 #include "../../path.h"
+#include <fstream>
+
+using HDL::writeToHandle;
 
 int aliasMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle)
 {
     if (tokenizedInput.size() != 3) {
-        writeToPipe(errorHandle, "ERROR: Incorrect number of arguments. Command syntax: alias <newAlias> <command>\n");
+        writeToHandle(errorHandle, "SYNTAX ERROR: Incorrect number of arguments. Command syntax: alias <newAlias> <command>\n");
         return -1;
     }
-
     // checking if the command exists
-    if (!isStringInFile(tokenizedInput[2], ARDO_PATH + "/configurations/builtinList.config", true).empty() or
-        !isStringInFile(tokenizedInput[2], ARDO_PATH + "/configurations/standardList.config", true).empty() or
-        !isStringInFile(tokenizedInput[2], ARDO_PATH + "/configurations/customList.config", true).empty())
+    if (std::filesystem::exists(ARDO_PATH + "\\cmd\\builtinManuals\\" + tokenizedInput[2] + ".txt") or
+        std::filesystem::exists(ARDO_PATH + "\\cmd\\custom\\" + tokenizedInput[2] + "\\" + tokenizedInput[2] + ".exe") or
+        std::filesystem::exists(ARDO_PATH + "\\cmd\\standard\\" + tokenizedInput[2] + "\\" + tokenizedInput[2] + ".exe"))
     {
         std::ofstream file(ARDO_PATH + "/configurations/aliases.config", std::ios::app);
         if (!file) {
-            writeToPipe(errorHandle, "ERROR: Failed to open aliases.config\n  expected path: " + ARDO_PATH + "/configurations/aliases.config\n");
+            writeToHandle(errorHandle, "ERROR: Failed to open aliases.config\n  expected path: " + ARDO_PATH + "/configurations/aliases.config\n");
             return -1;
         }
         file << endl << tokenizedInput[1] << "->" << tokenizedInput[2];
         return 0;
     }
 
-    writeToPipe(errorHandle, "ERROR: command doesn't exist or isn't listed as a valid command.");
+    writeToHandle(errorHandle, "ERROR: command doesn't exist or isn't listed as a valid command.");
     return -1;
 }

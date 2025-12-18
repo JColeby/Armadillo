@@ -1,21 +1,22 @@
 #include "headers/cd.h"
-#include "../../commonFunctions/writeToPipe.h"
+#include "../../commonFunctions/handleIO.h"
 
+using HDL::writeToHandle;
 
 namespace fs = std::filesystem;
 
 int cdMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle)
 {
     if (tokenizedInput.size() == 1) {
-        writeToPipe(errorHandle, "ERROR: Please pass in the name of the directory you want to change to\n");
+        writeToHandle(errorHandle, "SYNTAX ERROR: Expected directory path\n");
         return -1;
     }
     if (tokenizedInput.size() > 2) {
         std::stringstream errorMessage;
-        errorMessage << "ERROR: More than 1 argument detected." << endl
+        errorMessage << "SYNTAX ERROR: Too many arguments." << endl
              << "If the directory you are trying to change to contains a space, please surround it with quotes." << endl
              << "Example: cd \"folder with spaces\" ";
-        writeToPipe(errorHandle, errorMessage.str());
+        writeToHandle(errorHandle, errorMessage.str());
         return -1;
     }
 
@@ -28,7 +29,7 @@ int cdMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle,
         return 0;
     }
     catch (...) {
-        writeToPipe(errorHandle, "ERROR: No such file or directory\n");
+        writeToHandle(errorHandle, "ERROR: No such file or directory\n");
         return -1;
     }
 }

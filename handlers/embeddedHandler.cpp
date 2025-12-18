@@ -1,9 +1,9 @@
 #include "headers/embeddedHandler.h"
 #include "headers/inputHandler.h"
-#include "../commonFunctions/makePipe.h"
-#include "../commonFunctions/drainPipe.h"
+#include "../commonFunctions/handleIO.h"
 
-
+using HDL::drainPipe;
+using HDL::makePipe;
 
 // handles the logic for commands that are embedded into others
 void embeddedHandler(vector<string>& tokenizedInput)
