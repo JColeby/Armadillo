@@ -1,0 +1,7 @@
+
+    Mkdir Command:
+        will make a new directory
+
+    Syntax:
+        mkdir <newDirectoryName>
+

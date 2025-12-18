@@ -40,3 +40,7 @@ add_executable(sys cmd/standard/sys/sys.cpp)
 # libraries that need to be linked
 target_link_libraries(ps PRIVATE Psapi)
 target_link_libraries(sys PRIVATE Psapi)
+add_executable(date cmd/standard/date/date.cpp)
+add_executable(cp cmd/standard/cp/cp.cpp)
+add_executable(mkdir cmd/standard/mkdir/mkdir.cpp)
+add_executable(rm cmd/standard/rm/rm.cpp)

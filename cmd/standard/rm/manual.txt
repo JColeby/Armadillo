@@ -1,0 +1,10 @@
+
+    Remove Command:
+        lets you delete files and directories
+
+    Syntax:
+        rm <flag> <directory/file>
+
+    Flags:
+        -r recursive deletion in directory
+

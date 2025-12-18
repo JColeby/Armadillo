@@ -1,5 +1,7 @@
 #include <string>
 #include <iostream>
+#include <vector>
+
 #include "../../../TerminalFormatting.h"
 
 using std::string;
@@ -8,6 +10,8 @@ using std::cout;
 using namespace VT;
 
 int main(int argc, char* argv[]) {
+    std::vector<std::string> tokenizedInput(argv, argv + argc); // convert it to a proper array
+    if (tokenizedInput.size() != 1) { std::cerr << "SYNTAX ERROR: no additional arguments were expected" << std::endl; return -1; }
 
     string newString;    // Did this so the background would always format correctly
     newString += R"ASCII(                                                                                 )ASCII""\n";

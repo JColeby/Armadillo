@@ -1,0 +1,7 @@
+
+    Date Command:
+        will display the current date
+
+    Syntax:
+        date
+
