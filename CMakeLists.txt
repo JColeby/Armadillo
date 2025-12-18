@@ -5,14 +5,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # -----------------------
-# Shared source files
+# Main executable
 # -----------------------
-set(SHELL_SOURCES
+add_executable(Ardo
+        armadillo.cpp
         handlers/commandHandler.cpp
         handlers/embeddedHandler.cpp
         handlers/inputHandler.cpp
         handlers/pipeHandler.cpp
-        TerminalFormatting.h
         cmd/builtin/cd.cpp
         cmd/builtin/alias.cpp
         cmd/builtin/help.cpp
@@ -22,19 +22,10 @@ set(SHELL_SOURCES
         cmd/builtin/echo.cpp
 )
 
+
 # -----------------------
-# Main executable
+# command executables
 # -----------------------
-add_executable(Ardo
-        armadillo.cpp
-        ${SHELL_SOURCES}
-)
-
-
-if (WIN32)
-    target_link_libraries(Ardo PRIVATE Psapi)
-endif()
-
 add_executable(example cmd/custom/example/example.cpp)
 add_executable(ls cmd/standard/ls/ls.cpp)
 add_executable(grep cmd/standard/grep/grep.cpp)
@@ -43,3 +34,9 @@ add_executable(pwd cmd/standard/pwd/pwd.cpp)
 add_executable(cat cmd/standard/cat/cat.cpp)
 add_executable(ps cmd/standard/ps/ps.cpp)
 add_executable(sys cmd/standard/sys/sys.cpp)
+
+
+
+# libraries that need to be linked
+target_link_libraries(ps PRIVATE Psapi)
+target_link_libraries(sys PRIVATE Psapi)

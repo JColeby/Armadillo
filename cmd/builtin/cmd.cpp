@@ -23,8 +23,8 @@ struct Options {
 };
 
 
-bool evaluateFlags(vector<string> tokenizedInput, Options& opt) {
-    for (int i = 0; i < tokenizedInput.size(); i++) {
+bool evaluateFlags(vector<string>& tokenizedInput, Options& opt) {
+    for (int i = 1; i < tokenizedInput.size(); i++) {
         string param = tokenizedInput[i];
         if (!param.empty() and param[0] == '-') {
             for (int j = 1; j < param.size(); j++) {

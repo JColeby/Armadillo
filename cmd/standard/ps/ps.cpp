@@ -1,4 +1,6 @@
+#ifdef _MSC_VER
 #pragma comment(lib, "Psapi.lib")
+#endif
 #include <filesystem>
 #include <iostream>
 #include <string>
