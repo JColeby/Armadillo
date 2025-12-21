@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
   // standard setup
   Options opt;
   std::vector<std::string> tokenizedInput(argv, argv + argc); // convert it to a proper array
-  if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { return -1; }
+  if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { EXIT_FAILURE; }
 
   std::unordered_set<string> runningProcesses;
 
@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
   DWORD processes[1024], bytesReturned;
   if (!EnumProcesses(processes, sizeof(processes), &bytesReturned)) {
     cerr << "Failed to get processes. System error message: " << to_string(GetLastError()) << endl;
-    return -1;
+    EXIT_FAILURE;
   }
 
   std::stringstream outputBuffer;
@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
   }
 
   cout << outputBuffer.str();
-  return 0;
+  return EXIT_SUCCESS;
 }
 
 

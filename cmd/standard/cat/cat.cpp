@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
   vector<string> tokenizedInput(argv, argv + argc);
   if (tokenizedInput.size() != 2) {
     cerr << "SYNTAX ERROR: Incorrect number of arguments. Command syntax: cat <filepath>\n";
-    return -1;
+    return EXIT_FAILURE;
   }
 
   try {
@@ -26,10 +26,10 @@ int main(int argc, char* argv[]) {
       output.push_back('\n');
     }
     cout << output << endl;
-    return 0;
+    return EXIT_SUCCESS;
   }
   catch (const std::exception& e) {
     cerr << "ERROR: " << e.what() << endl;
-    return -1;
+    return EXIT_FAILURE;
   }
 }

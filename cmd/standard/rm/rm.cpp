@@ -46,18 +46,18 @@ int main(int argc, char* argv[]) {
     // standard setup
     Options opt;
     std::vector<std::string> tokenizedInput(argv, argv + argc); // convert it to a proper array
-    if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { return -1; }
+    if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { return EXIT_FAILURE; }
 
     fs::path path(opt.target);
 
     if (!fs::exists(path)) {
         std::cerr << "ERROR: no such file or directory: " << opt.target << "\n";
-        return -1;
+        return EXIT_FAILURE;
     }
 
     if (fs::is_directory(path) && !opt.recursive) {
         std::cerr << "ERROR: cannot remove directory '" << opt.target << "'\n";
-        return -1;
+        return EXIT_FAILURE;
     }
 
     try {
@@ -66,15 +66,15 @@ int main(int argc, char* argv[]) {
         } else {
             if (!fs::remove(path)) {
                 std::cerr << "ERROR: failed to remove file or directory\n";
-                return -1;
+                return EXIT_FAILURE;
             }
         }
     }
 
     catch (...) {
         std::cerr << "ERROR: failed to remove file or directory\n";
-        return -1;
+        return EXIT_FAILURE;
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }

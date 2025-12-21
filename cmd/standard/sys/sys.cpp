@@ -328,7 +328,7 @@ int main(int argc, char* argv[]) {
     // standard setup
     Options opt;
     std::vector<std::string> tokenizedInput(argv, argv + argc); // convert it to a proper array
-    if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { return -1; }
+    if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { return EXIT_FAILURE; }
 
     if (verify()) {
       red = RED;
@@ -350,5 +350,5 @@ int main(int argc, char* argv[]) {
     if (opt.getPerformance) { outputBuffer << getPerformanceInfo(); }
     outputBuffer << endl;
     cout << outputBuffer.str();
-    return 0;
+    return EXIT_SUCCESS;
 }

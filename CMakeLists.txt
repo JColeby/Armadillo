@@ -20,6 +20,7 @@ add_executable(Ardo
         cmd/builtin/man.cpp
         handlers/redirectionHandler.cpp
         cmd/builtin/echo.cpp
+        handlers/handleHandler.h
 )
 
 
@@ -33,14 +34,11 @@ add_executable(edit cmd/standard/edit/edit.cpp)
 add_executable(pwd cmd/standard/pwd/pwd.cpp)
 add_executable(cat cmd/standard/cat/cat.cpp)
 add_executable(ps cmd/standard/ps/ps.cpp)
-add_executable(sys cmd/standard/sys/sys.cpp)
-
-
-
-# libraries that need to be linked
 target_link_libraries(ps PRIVATE Psapi)
+add_executable(sys cmd/standard/sys/sys.cpp)
 target_link_libraries(sys PRIVATE Psapi)
 add_executable(date cmd/standard/date/date.cpp)
 add_executable(cp cmd/standard/cp/cp.cpp)
 add_executable(mkdir cmd/standard/mkdir/mkdir.cpp)
 add_executable(rm cmd/standard/rm/rm.cpp)
+add_executable(touch cmd/standard/touch/touch.cpp)

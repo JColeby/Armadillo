@@ -9,13 +9,14 @@
 #include "../cmd/builtin/headers/cmd.h"
 #include "../cmd/builtin/headers/man.h"
 #include "../cmd/builtin/headers/echo.h"
+#include "handleHandler.h"
 
 using HDL::drainPipe;
 
 // evaluates and executes builtin commands
 bool evaluateBuiltins(vector<string>& tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle) {
     try {
-        string command = tokenizedInput[0];
+        const string& command = tokenizedInput[0];
         if (command == "clear") {  system("cls"); return true; }
         if (command == "cd") { cdMain(tokenizedInput, readHandle, writeHandle, errorHandle); return true; }
         if (command == "alias") { aliasMain(tokenizedInput, readHandle, writeHandle, errorHandle); return true; }
@@ -38,7 +39,7 @@ bool evaluateBuiltins(vector<string>& tokenizedInput, HANDLE readHandle, HANDLE 
 
 // finds the path to the command executable.
 // Will first check to see if the command is an alias, to which it will update to the corresponding command
-string getCommandPath(string cmd) {
+string getCommandPath(const string& cmd) {
     // checking the custom folder
     if (std::filesystem::exists(ARDO_PATH + "\\cmd\\custom\\" + cmd + "\\" + cmd + ".exe")) {
         return ARDO_PATH + "\\cmd\\custom\\" + cmd + "\\" + cmd + ".exe";

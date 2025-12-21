@@ -1,0 +1,7 @@
+
+    Touch Command:
+        Creates a new file
+
+    Syntax:
+        touch <fileName>
+

@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
     Options opt;
     std::vector<std::string> tokenizedInput(argv, argv + argc);
 
-    if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { return -1; }
+    if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { return EXIT_FAILURE; }
 
     std::stringstream output;
 
@@ -90,8 +90,9 @@ int main(int argc, char* argv[]) {
     }
     catch (const fs::filesystem_error &e) {
       cerr << "ERROR: Cannot open directory: " << opt.directory << endl;
-      return -1;
+      return EXIT_FAILURE;
     }
 
     cout << output.str();
+    return EXIT_SUCCESS;
 }

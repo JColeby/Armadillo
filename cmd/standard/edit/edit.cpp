@@ -17,10 +17,10 @@ int main(int argc, char* argv[]) {
 
     if (!Edit::validateSyntax(tokenizedInput)) {
       cerr << "ERROR: invalid syntax. Expected only 1 argument" << endl;
-      return -1;
+      return EXIT_FAILURE;
     }
 
     Edit editor(tokenizedInput);
     editor.executeCommand();
-    return 0;
+    return EXIT_SUCCESS;
 }

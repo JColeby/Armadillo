@@ -31,9 +31,11 @@ void pipeHandler(const vector<string>& tokenizedInput, HANDLE& finalWriteHandle)
     previousReadHandle = readHandle; // next command will now be able to read from this handle
   }
 
+
   // the very last thread should write to stdout (or to another handle if it's an embedded command)
   // we want to close the write handle on finish for our pipes but not the final handle, as that would either break the embedded command or close STD_OUTPUT_HANDLE
-  threads.emplace_back(redirectionHandler, individualCommands[individualCommands.size()-1], previousReadHandle, finalWriteHandle, false);
+  redirectionHandler(individualCommands[individualCommands.size()-1], previousReadHandle, finalWriteHandle, false);
+
 
   for (auto& t : threads) {
     t.join();

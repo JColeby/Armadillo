@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
     Options opt;
     vector<string> tokenizedInput(argv, argv + argc);
 
-    if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { return -1; }
+    if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { EXIT_FAILURE; }
 
     try {
       std::regex regExpression;
@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
       }
 
-      return 0;
+      return EXIT_SUCCESS;
     }
     catch (const std::regex_error& e) {
       cerr << "Invalid regular expression: " << e.what();

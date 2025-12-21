@@ -27,5 +27,5 @@ int main(int argc, char* argv[]) {
 
     if (verify()) { cout << setBgColor(31,30,51) << YELLOW << newString << RESET_TEXT; }
     else { cout << newString; }
-    return 0;
+    return EXIT_SUCCESS;
 }

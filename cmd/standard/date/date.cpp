@@ -19,5 +19,5 @@ int main(int argc, char* argv[]) {
     std::time_t dateAndTime = std::chrono::system_clock::to_time_t(systemTime);
     cout << std::ctime(&dateAndTime) << std::endl;
 
-    return 0;
+    return EXIT_SUCCESS;
 }
