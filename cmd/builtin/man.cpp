@@ -41,3 +41,4 @@ int manMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle
     writeToHandle(writeHandle, getTextFile(path));
     return 0;
 }
+
