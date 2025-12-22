@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
     if (output.empty() || output.back() != '\n') {
       output.push_back('\n');
     }
-    cout << output << endl;
+    cout << output;
     return EXIT_SUCCESS;
   }
   catch (const std::exception& e) {

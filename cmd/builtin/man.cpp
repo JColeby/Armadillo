@@ -30,7 +30,7 @@ int manMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle
 
 
     if (path.empty()) {
-        writeToHandle(errorHandle, "ERROR: Command does not exist.\n");
+        writeToHandle(errorHandle, "ERROR: " + tokenizedInput[1] + " is not a valid command.\n");
         return -1;
     }
     if (!std::filesystem::exists(path)) {
