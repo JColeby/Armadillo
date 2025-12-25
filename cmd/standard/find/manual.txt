@@ -1,0 +1,20 @@
+
+    Find Command:
+        finds files or directories within the specified folder.
+
+    Syntax:
+        find <starting directory> <desired file> <flags>
+
+    Flags:
+        -d      will only match directory names
+        -f      will only match file names
+        -a      will recursively search the entire folder and return all files that match
+        -s      will display the path from the starting directory instead of the full path
+        -r      will recursively search through all folders inside the starting directory
+        -h      allows you to search for and within hidden directories
+        -i      case-insensitive matching
+
+        -D      allows you to specify the recursion depth of your search (-r flag must be present for this to work).
+                You will need to pass in a number directly after this flag (i.e. 'find ./ file.txt -rD 5' )
+                flag aliases: --depth
+

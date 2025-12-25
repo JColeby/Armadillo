@@ -20,8 +20,7 @@ bool validateSyntaxAndSetFlags(std::vector<std::string> &tokenizedInput, Options
         const std::string& param = tokenizedInput[i];
 
         // setting flag values
-        if (!param.empty() && param[0] == '-') {
-            if (param.size() == 1) { std::cerr << "SYNTAX ERROR: expected flag identifier after '-'" << std::endl; return false;}
+        if (param.size() > 1 && param[0] == '-' && !std::isdigit(param[1])) {
             std::string currentFlag; // holds a string of the flag we are evaluating so the user knows which flag caused an error
             try {
                 // multi-character flags
@@ -59,6 +58,7 @@ bool validateSyntaxAndSetFlags(std::vector<std::string> &tokenizedInput, Options
                 return false;
             }
         }
+        else if (param.size() == 1 && param[0] == '-') { std::cerr << "SYNTAX ERROR: expected flag identifier after '-'" << std::endl; return false;}
 
         // setting normal Items
         else {

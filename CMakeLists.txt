@@ -20,7 +20,6 @@ add_executable(Ardo
         cmd/builtin/man.cpp
         handlers/redirectionHandler.cpp
         cmd/builtin/echo.cpp
-        handlers/handleHandler.h
 )
 
 
@@ -42,3 +41,4 @@ add_executable(cp cmd/standard/cp/cp.cpp)
 add_executable(mkdir cmd/standard/mkdir/mkdir.cpp)
 add_executable(rm cmd/standard/rm/rm.cpp)
 add_executable(touch cmd/standard/touch/touch.cpp)
+add_executable(find cmd/standard/find/find.cpp)

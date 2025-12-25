@@ -1,6 +1,5 @@
 #include "headers/cmd.h"
 #include "../../TerminalFormatting.h"
-#include "../../commonFunctions/stripWhitespace.h"
 #include "../../commonFunctions/handleIO.h"
 #include "../../path.h"
 #include <fstream>
