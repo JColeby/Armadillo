@@ -93,6 +93,13 @@ bool isHandleWritable(HANDLE h) {
 }
 
 
+std::string addQuotesIfMissing(const std::string& input) {
+    if (input.empty()) return "\"\"";
+    if (input.front() == '"' && input.back() == '"') { return input; }
+    return "\"" + input + "\"";
+}
+
+
 
 // finds and executes the desired command
 void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle, bool closeWriteOnFinish) {
@@ -138,7 +145,7 @@ void commandHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE wri
     // setting up our command-line arguments to pass into the executable
     std::string cmdline = "\"" + commandFilePath + "\"";
     for (size_t i = 1; i < tokenizedInput.size(); i++) {
-        cmdline += " " + tokenizedInput[i];
+        cmdline += " " + addQuotesIfMissing(tokenizedInput[i]);
     }
 
     // we pass this into CreateProcess so windows knows where to redirect the input and output of the new process

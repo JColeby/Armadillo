@@ -37,6 +37,7 @@ int checkDirectoryEntry(const fs::directory_entry& entry, Options& opt, SearchIn
 
 bool checkEntryName(string file, string currentDirectory, bool isDirectory, Options& opt, SearchInfo& sInfo);
 
-void printFoundItem(const string& currentDirectory, bool isDirectory);
+void printFoundItem(const string& currentDirectory, const string& file, bool isDirectory);
 
+std::vector<std::string> splitArgs(const std::string& cmdline);
 

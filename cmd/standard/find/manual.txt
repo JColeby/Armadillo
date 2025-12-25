@@ -18,3 +18,5 @@
                 You will need to pass in a number directly after this flag (i.e. 'find ./ file.txt -rD 5' )
                 flag aliases: --depth
 
+    Note: you can use * syntax to signify that you want to match all files that begin with, end with, or contain the desired string.
+    Example: *cpp will match all files that end with 'cpp' and file* will match all files that start with 'file'

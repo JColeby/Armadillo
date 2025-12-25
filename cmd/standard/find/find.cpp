@@ -151,25 +151,25 @@ int checkDirectoryEntry(const fs::directory_entry& entry, Options& opt, SearchIn
 
       if (sInfo.starInFront and sInfo.starInBack) {
         if (file.find(sInfo.stringToFind) != string::npos) {
-            printFoundItem(currentDirectory, isDirectory);
+            printFoundItem(currentDirectory, file, isDirectory);
             return true;
         }
       }
       else if (sInfo.starInFront) {
         if (STR_MANIP::endsWith(file, sInfo.stringToFind)) {
-            printFoundItem(currentDirectory, isDirectory);
+            printFoundItem(currentDirectory, file, isDirectory);
             return true;
         }
       }
       else if (sInfo.starInBack) {
         if (STR_MANIP::startsWith(file, sInfo.stringToFind)) {
-            printFoundItem(currentDirectory, isDirectory);
+            printFoundItem(currentDirectory, file, isDirectory);
             return true;
         }
       }
       else {
         if (sInfo.stringToFind == file) {
-            printFoundItem(currentDirectory, isDirectory);
+            printFoundItem(currentDirectory, file, isDirectory);
             return true;
         }
       }
@@ -177,16 +177,38 @@ int checkDirectoryEntry(const fs::directory_entry& entry, Options& opt, SearchIn
   }
 
 
-  void printFoundItem(const string& currentDirectory, bool isDirectory) {
-    string newMatch = currentDirectory;
+  void printFoundItem(const string& currentDirectory, const string& file, bool isDirectory) {
+    string newMatch = currentDirectory + "\\" + file;
     if (isDirectory) { newMatch += fs::path::preferred_separator; }
     cout << newMatch << endl;
   }
 
 
+// custom parsing for command-line arguments because windows will automatically motify * syntax which we don't want
+std::vector<std::string> splitArgs(const std::string& cmdline) {
+    std::vector<std::string> args;
+    std::string current;
+    bool inQuotes = false;
+
+    for (size_t i = 0; i < cmdline.size(); ++i) {
+        char c = cmdline[i];
+        if (c == '"') { inQuotes = !inQuotes; }
+        else if (c == ' ' && !inQuotes) {
+            if (!current.empty()) {
+                args.push_back(current);
+                current.clear();
+            }
+        }
+        else { current += c; }
+    }
+    if (!current.empty()) { args.push_back(current); }
+    return args;
+}
+
+
 int main(int argc, char* argv[]) {
     Options opt;
-    std::vector<std::string> tokenizedInput(argv, argv + argc); // convert it to a proper array
+    std::vector<std::string> tokenizedInput = splitArgs(std::string(GetCommandLine()));
     if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { return EXIT_FAILURE; }
 
     SearchInfo sInfo;
@@ -194,5 +216,4 @@ int main(int argc, char* argv[]) {
 
     fs::path startPath = opt.startingDirectory;
     searchDirectoryEntries(startPath, opt.depth, opt, sInfo);
-
 }
