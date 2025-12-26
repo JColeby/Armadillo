@@ -1,7 +1,5 @@
 #include "headers/inputHandler.h"
 #include "headers/pipeHandler.h"
-#include "../TerminalFormatting.h"
-#include "../commonFunctions/listToString.h"
 #include "../commonFunctions/separateTokensByToken.h"
 #include "headers/commandHandler.h"
 
@@ -66,7 +64,7 @@ void inputHandler(const string& userInput, HANDLE& finalWriteHandle) {
       }
     }
     catch (std::runtime_error& e) {
-      cerr << e.what() << endl;
+      cerr << "ARDO ERROR: An unexpected error occurred. " << e.what() << endl;
     }
 
 }

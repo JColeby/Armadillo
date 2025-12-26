@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include "../../../redCerr.h"
 
 namespace fs = std::filesystem;
 
@@ -43,6 +44,7 @@ bool validateSyntaxAndSetFlags(std::vector<std::string> &tokenizedInput, Options
 
 
 int main(int argc, char* argv[]) {
+    setCerrColorRed();
     // standard setup
     Options opt;
     std::vector<std::string> tokenizedInput(argv, argv + argc); // convert it to a proper array

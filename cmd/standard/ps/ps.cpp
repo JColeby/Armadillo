@@ -11,6 +11,7 @@
 #include <psapi.h>
 
 #include "../../../TerminalFormatting.h"
+#include "../../../redCerr.h"
 
 using namespace VT;
 using std::to_string;
@@ -62,6 +63,7 @@ string utf8_encode(const std::wstring& wstr) {
 
 
 int main(int argc, char* argv[]) {
+    setCerrColorRed();
   // standard setup
   Options opt;
   std::vector<std::string> tokenizedInput(argv, argv + argc); // convert it to a proper array

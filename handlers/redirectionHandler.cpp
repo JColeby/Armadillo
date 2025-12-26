@@ -8,8 +8,7 @@ using HDL::drainPipe;
 
 // handles the logic for redirecting stdout and stderr
 // remember, the last command in a pipe chain should have closeWriteOnFinish set to false so we don't close STD_OUTPUT_HANDLE
-void redirectionHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, bool closeWriteOnFinish)
-{
+void redirectionHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, bool closeWriteOnFinish) {
   std::unordered_set<HANDLE> handlesToClose;
 
   HANDLE stdinHandle = readHandle;
@@ -32,7 +31,7 @@ void redirectionHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE
       HANDLE outputHandle;
       if (!openWriteFileHandle(outputHandle, outputFile, (token == ">>"))) {
         cerr << "ARDO ERROR: Failed to open file for output redirection: " << outputFile << endl
-         << "  Will redirect to previous destination. " << endl;
+         << "  Will redirect stdout to previous destination. " << endl;
       }
       else if (outputHandle != nullptr) {
         // we need to check if this command was embedded into another, as the code that handles embedded commands
@@ -61,7 +60,7 @@ void redirectionHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE
       HANDLE outputHandle;
       if (!openWriteFileHandle(outputHandle, outputFile, (token == "2>>"))) {
         cerr << "ARDO ERROR: Failed to open file for output redirection: " << outputFile << endl
-         << "  Will redirect to previous destination. " << endl;
+         << "  Will redirect stderr to previous destination. " << endl;
       }
       else if (outputHandle != nullptr) {
         if (stderrHandle != GetStdHandle(STD_ERROR_HANDLE)) { handlesToClose.insert(stderrHandle); }
@@ -81,7 +80,7 @@ void redirectionHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE
       HANDLE outputHandle;
       if (!openWriteFileHandle(outputHandle, outputFile, (token == "&>>"))) {
         cerr << "ARDO ERROR: Failed to open file for output redirection: " << outputFile << endl
-         << "Will redirect to previous destination. " << endl;
+         << "Will redirect stdout and stderr to previous destination. " << endl;
       }
       else if (outputHandle != nullptr) {
 
@@ -112,7 +111,7 @@ void redirectionHandler(vector<string> tokenizedInput, HANDLE readHandle, HANDLE
 
       if (!openInputFileHandle(inputHandle, inputFile)) {
         cerr << "ARDO ERROR: Failed to open file for input redirection: " << inputFile << endl
-         << "  Will pull from previous destination. " << endl;
+         << "  Will pull stdin from previous destination. " << endl;
       }
 
       else if (inputHandle != nullptr) {

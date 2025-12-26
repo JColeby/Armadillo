@@ -10,6 +10,7 @@
 
 #include "../../../TerminalFormatting.h"
 #include "../../../commonFunctions/bytesToReadableString.h"
+#include "../../../redCerr.h"
 
 using std::string;
 using std::vector;
@@ -325,6 +326,7 @@ string colorText(const string& message, std::string_view color) {
 
 
 int main(int argc, char* argv[]) {
+    setCerrColorRed();
     // standard setup
     Options opt;
     std::vector<std::string> tokenizedInput(argv, argv + argc); // convert it to a proper array

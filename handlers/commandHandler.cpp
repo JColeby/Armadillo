@@ -9,7 +9,6 @@
 #include "../cmd/builtin/headers/cmd.h"
 #include "../cmd/builtin/headers/man.h"
 #include "../cmd/builtin/headers/echo.h"
-#include "handleHandler.h"
 
 using HDL::drainPipe;
 

@@ -116,6 +116,24 @@ inline bool writeToHandle(HANDLE writeHandle, const std::string& data) {
 }
 
 
+// writes to a stderr handle. Really just sets the color to red if the handle is a console.
+inline bool writeToErrHandle(HANDLE writeHandle, const std::string& data) {
+    CONSOLE_SCREEN_BUFFER_INFO info{};
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD consoleMode = 0;
+    GetConsoleMode(hOut, &consoleMode);
+    if (consoleMode & ENABLE_VIRTUAL_TERMINAL_PROCESSING) {
+        GetConsoleScreenBufferInfo(writeHandle, &info);
+        SetConsoleTextAttribute(writeHandle, FOREGROUND_RED | FOREGROUND_INTENSITY);
+    }
+    bool result = writeToHandle(writeHandle, data);
+    if (consoleMode & ENABLE_VIRTUAL_TERMINAL_PROCESSING) {
+        SetConsoleTextAttribute(writeHandle, info.wAttributes);
+    }
+    return result;
+}
+
+
 
 // Reads all remaining data from a pipe handle and returns it as a std::string.
 // This function blocks until the writer closes the pipe (EOF).

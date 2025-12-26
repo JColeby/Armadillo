@@ -8,12 +8,14 @@
 
 
 using HDL::writeToHandle;
+using HDL::writeToErrHandle;
+
 
 using namespace VT;
 
 int manMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle) {
     if (tokenizedInput.size() != 2) {
-        writeToHandle(errorHandle, "SYNTAX ERROR: Incorrect number of arguments. Command syntax: man <command>\n");
+        writeToErrHandle(errorHandle, "SYNTAX ERROR: Incorrect number of arguments. Command syntax: man <command>\n");
         return -1;
     }
 
@@ -30,11 +32,11 @@ int manMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle
 
 
     if (path.empty()) {
-        writeToHandle(errorHandle, "ERROR: " + tokenizedInput[1] + " is not a valid command.\n");
+        writeToErrHandle(errorHandle, "ERROR: " + tokenizedInput[1] + " is not a valid command.\n");
         return -1;
     }
     if (!std::filesystem::exists(path)) {
-        writeToHandle(errorHandle, "ERROR: manual file not found. Expected path: " + path + "\n");
+        writeToErrHandle(errorHandle, "ERROR: manual file not found. Expected path: " + path + "\n");
         return -1;
     }
 

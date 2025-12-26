@@ -1,14 +1,16 @@
 #include "headers/cd.h"
 #include "../../commonFunctions/handleIO.h"
 
-using HDL::writeToHandle;
+
+using HDL::writeToErrHandle;
+
 
 namespace fs = std::filesystem;
 
 int cdMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle, HANDLE errorHandle)
 {
     if (tokenizedInput.size() == 1) {
-        writeToHandle(errorHandle, "SYNTAX ERROR: Expected directory path\n");
+        writeToErrHandle(errorHandle, "SYNTAX ERROR: Expected directory path\n");
         return -1;
     }
     if (tokenizedInput.size() > 2) {
@@ -16,7 +18,7 @@ int cdMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle,
         errorMessage << "SYNTAX ERROR: Too many arguments." << endl
              << "If the directory you are trying to change to contains a space, please surround it with quotes." << endl
              << "Example: cd \"folder with spaces\" ";
-        writeToHandle(errorHandle, errorMessage.str());
+        writeToErrHandle(errorHandle, errorMessage.str());
         return -1;
     }
 
@@ -29,7 +31,7 @@ int cdMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle,
         return 0;
     }
     catch (...) {
-        writeToHandle(errorHandle, "ERROR: No such file or directory\n");
+        writeToErrHandle(errorHandle, "ERROR: No such file or directory\n");
         return -1;
     }
 }

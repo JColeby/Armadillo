@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <fstream>
 #include "../../../TerminalFormatting.h"
+#include "../../../redCerr.h"
 
 using std::string;
 using std::vector;
@@ -52,6 +53,8 @@ bool endsWith(const std::string& s, const std::string end) {
 
 
 int main(int argc, char* argv[]) {
+    setCerrColorRed();
+
     Options opt;
     std::vector<std::string> tokenizedInput(argv, argv + argc);
 

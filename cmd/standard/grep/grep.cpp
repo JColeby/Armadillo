@@ -4,6 +4,7 @@
 #include <regex>
 #include <sstream>
 #include <unistd.h>
+#include "../../../redCerr.h"
 
 using std::string;
 using std::vector;
@@ -47,6 +48,8 @@ bool validateSyntaxAndSetFlags(std::vector<std::string> &tokenizedInput, Options
 
 
 int main(int argc, char* argv[]) {
+    setCerrColorRed();
+
     Options opt;
     vector<string> tokenizedInput(argv, argv + argc);
 

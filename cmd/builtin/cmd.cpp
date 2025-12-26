@@ -9,6 +9,8 @@
 namespace fs = std::filesystem;
 
 using HDL::writeToHandle;
+using HDL::writeToErrHandle;
+
 
 
 using namespace VT;
@@ -76,7 +78,7 @@ int cmdMain(vector<string> tokenizedInput, HANDLE readHandle, HANDLE writeHandle
     catch (std::runtime_error& e) {
       std::stringstream errorMessage;
       errorMessage << "SYNTAX ERROR: " << e.what() << endl;
-      writeToHandle(errorHandle, errorMessage.str());
+      writeToErrHandle(errorHandle, errorMessage.str());
       return -1;
     }
 

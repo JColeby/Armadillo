@@ -9,6 +9,7 @@
 #include "path.h"
 #include "commonFunctions/getTextFile.h"
 #include "handlers/headers/inputHandler.h"
+#include "redCerr.h"
 
 using std::string;
 using std::vector;
@@ -18,14 +19,6 @@ using std::endl;
 using std::ifstream;
 
 using namespace VT;
-
-
-// used to ensure text from cerr is RED
-struct RedCerrANSI {
-  RedCerrANSI() { std::cerr << RED; }
-  ~RedCerrANSI() { std::cerr << RESET_TEXT; }
-};
-
 
 // Makes sure Ardo can find all the essential files before starting.
 // Will refactor this later so there isn't as much duplicate code
@@ -121,14 +114,14 @@ int main() {
     DWORD newMode = originalMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOut, newMode);
 
-    // making cerr display with red text
-    static RedCerrANSI redCerr;
-
     // validating that we have all the essential files
     if (validatePathStructure() == -1) {
         SetConsoleMode(hOut, originalMode);
         return -1;
     }
+
+    // setting error color to red
+    setCerrColorRed();
 
     displayLogoAndASCII();
 

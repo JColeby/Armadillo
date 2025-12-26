@@ -4,6 +4,7 @@
 #include <windows.h>
 #include "find.h"
 #include "../../../commonFunctions/stringManipulation.h"
+#include "../../../redCerr.h"
 
 using std::string;
 using std::vector;
@@ -76,8 +77,8 @@ bool validateSyntaxAndSetFlags(std::vector<std::string> &tokenizedInput, Options
         }
     }
     // final checks
-    if (opt.startingDirectory.empty()) { std::cerr << "SYNTAX ERROR: expected additional parameter 'nonFlag1'" << std::endl; return false; }
-    if (opt.desiredFile.empty()) { std::cerr << "SYNTAX ERROR: expected additional parameter 'nonFlag2'" << std::endl; return false; }
+    if (opt.startingDirectory.empty()) { std::cerr << "SYNTAX ERROR: expected additional parameter 'startingDirectory'" << std::endl; return false; }
+    if (opt.desiredFile.empty()) { std::cerr << "SYNTAX ERROR: expected additional parameter 'desiredFile'" << std::endl; return false; }
     if (!opt.recursiveSearch && depthSet) { std::cerr << "WARNING: depth was set without the recursion flag present." << std::endl; }
     if (opt.recursiveSearch && !depthSet) { opt.recurseIndefinitely = true; }
     if (!opt.matchDirectories && !opt.matchFiles) { opt.matchFiles = true; }
@@ -207,6 +208,7 @@ std::vector<std::string> splitArgs(const std::string& cmdline) {
 
 
 int main(int argc, char* argv[]) {
+    setCerrColorRed();
     Options opt;
     std::vector<std::string> tokenizedInput = splitArgs(std::string(GetCommandLine()));
     if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { return EXIT_FAILURE; }

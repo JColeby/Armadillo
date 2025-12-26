@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "../../../TerminalFormatting.h"
+#include "../../../redCerr.h"
 
 using std::string;
 using std::cout;
@@ -10,6 +11,7 @@ using std::cout;
 using namespace VT;
 
 int main(int argc, char* argv[]) {
+    setCerrColorRed();
     std::vector<std::string> tokenizedInput(argv, argv + argc); // convert it to a proper array
     if (tokenizedInput.size() != 1) { std::cerr << "SYNTAX ERROR: no additional arguments were expected" << std::endl; return -1; }
 

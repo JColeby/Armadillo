@@ -2,10 +2,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+#include "../../../redCerr.h"
 
 
 int main(int argc, char* argv[]) {
+    setCerrColorRed();
     std::vector<std::string> tokenizedInput(argv, argv + argc); // convert it to a proper array
     if (tokenizedInput.size() != 3) {
         std::cout << "SYNTAX ERROR: Expected only 2 parameters" << std::endl;
