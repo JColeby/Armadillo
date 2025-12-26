@@ -2,6 +2,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "../../../redCerr.h"
 
 // structure to store all the parameters and flags provided by the user
 struct Options {
@@ -82,6 +83,7 @@ bool validateSyntaxAndSetFlags(std::vector<std::string> &tokenizedInput, Options
 
 int main(int argc, char* argv[]) {
     // standard setup
+    setCerrColorRed(); // this will redirect cerr to a stream buffer that sets the color to red and prints to the location of cerr
     Options opt;
     std::vector<std::string> tokenizedInput(argv, argv + argc); // convert it to a proper array
     if (!validateSyntaxAndSetFlags(tokenizedInput, opt)) { return EXIT_FAILURE; }
